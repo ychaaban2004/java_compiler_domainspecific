@@ -1,6 +1,6 @@
 # Java-Compiler-DomainSpecific
 
-This is a Java compiler, called **Tricks**, built to understand how compilers are built and with added functionality we deemed would improve the language.
+This is a Java compiler, called **Trick**, built to understand how compilers are built and with added functionality we deemed would improve the language.
 
 Programming Language Developed: Trick - a domain specific version of Java
 
@@ -10,31 +10,33 @@ Please note this language is built upon following the following source very clos
 
 [Crafting Interpreters](https://craftinginterpreters.com/)
 
-Trick Language Documentation:
+## Trick Language Documentation:
 
         While most of the language follows conventional Java implementation there are notable differences
 
-##      Trick type	Java representation
-        Any Lox value	Object
-        nil	null
-        Boolean	Boolean
-        number	Double
-        string	String
+###      Trick type	Java representation
+####    Any Lox value: ||||||||||||||||   Object:
+        nil	                null
+        Boolean	        Boolean
+        number	        Double
+        string	        String
 
-##      Truth?
+###      Truth?
         Any boolean false and nil value are considered false while all else is true
 
-##       String Manipulation:
+###      String Manipulation:
 
         Arithemtic a + b also works to concatenate two strings
 
-##       Numbers/Arithmetic
+###     Numbers/Arithmetic
         All numbers are doubles
         Supports checking for equality/inequality (=/!=) between any types - i.e check for 3 = three (Reals on ##Truth? logic)
 
+###     Exit Codes
+        65: Syntax error while scanning
+        70: Computation error while running the interpreter 
 
-
-HEAD NOTES:
+HEAD NOTES FOR DEVELOPERS:
 - Any mention of "|*********|" indicates an area of improvement or advancement  needed for development
 - Any mention of "|&&&&&&&&&| indicates uncertainties or additions needed for basic functionality
 -Any mention of ?!?!?!?!?! indicates a new addition that needs to be tested

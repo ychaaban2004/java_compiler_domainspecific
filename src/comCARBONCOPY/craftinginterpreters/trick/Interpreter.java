@@ -3,6 +3,11 @@ package comCARBONCOPY.craftinginterpreters.trick;
 import static comCARBONCOPY.craftinginterpreters.trick.TokenType.*;
 
 class Interpreter implements Expr.Visitor<Object>{
+    /*Public API connecting the expression interaction of Interpreter, Expr,
+        and Parser to the character consuming program of Trick
+    @param: expression - of Expr type
+    @return: void
+    */
     void interpret(Expr expression){
         try {
             Object value = evaluate(expression);

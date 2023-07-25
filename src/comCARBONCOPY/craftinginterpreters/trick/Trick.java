@@ -67,13 +67,12 @@ public class Trick{
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
 
-        //for now we will be printing the parsed AST tree from expressions
         Parser parser = new Parser(tokens);
         Expr expression = parser.parse();
 
         //stop all parsing if error occurs for now
         if(hadError) return;
-
+        //this is where the API from Interpreter is implemented
         interpreter.interpret(expression);
     }
 
