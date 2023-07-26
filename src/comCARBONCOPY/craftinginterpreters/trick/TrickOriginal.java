@@ -1,7 +1,6 @@
 package comCARBONCOPY.craftinginterpreters.trick;
 
 import java.io.BufferedReader;
-import java.io.File; //DO NOT DELETE: this will be used when reading a file rather than line by line
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
@@ -12,8 +11,8 @@ import java.util.List;
 /*Main Class
  * Runs source code files, and line by line inputs, holds the main method to run
  */
-public class Trick{
-    private  static  final Interpreter interpreter = new Interpreter();
+public class TrickOriginal {
+    private  static  final InterpreterOriginal interpreter = new InterpreterOriginal();
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
 
@@ -64,11 +63,11 @@ public class Trick{
      * @return: none
      */
     private static void run(String source){
-        Scanner scanner = new Scanner(source);
-        List<Token> tokens = scanner.scanTokens();
+        ScannerOriginal scanner = new ScannerOriginal(source);
+        List<TokenOriginal> tokens = scanner.scanTokens();
 
-        Parser parser = new Parser(tokens);
-        Expr expression = parser.parse();
+        ParserOriginal parser = new ParserOriginal(tokens);
+        ExprOriginal expression = parser.parse();
 
         //stop all parsing if error occurs for now
         if(hadError) return;
@@ -85,8 +84,8 @@ public class Trick{
     }
     /*|************************| Include more advanced error reporting, rather than just the line
     specify where excatly in the line with a string message*/
-    static void error(Token token, String message){
-        if(token.type == TokenType.EOF){
+    static void error(TokenOriginal token, String message){
+        if(token.type == TokenTypeOriginal.EOF){
             report(token.line, " at end", message);
         } else{
             report(token.line," at '" + token.lexeme +"'", message);
@@ -97,7 +96,7 @@ public class Trick{
         hadError = true;
     }
 
-    static void runtimeError(RuntimeError error){
+    static void runtimeError(RuntimeErrorOriginal error){
         System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
         hadRuntimeError = true;
     }

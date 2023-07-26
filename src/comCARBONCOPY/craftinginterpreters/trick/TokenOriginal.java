@@ -1,7 +1,7 @@
 package comCARBONCOPY.craftinginterpreters.trick;
 /*Token instantiation abstracted in a class */
-class Token {
-    final TokenType type;
+public class TokenOriginal {
+    final TokenTypeOriginal type;
     final String lexeme;
     final Object literal;
     final int line;
@@ -10,7 +10,7 @@ class Token {
      * @param: token type - trick's enum object, lexeme name - string, line number - int
      * @return: toke - object
      */
-    Token(TokenType type, String lexeme, Object literal, int line){
+    TokenOriginal(TokenTypeOriginal type, String lexeme, Object literal, int line){
         this.type = type;
         this.lexeme = lexeme;
         this.literal = literal;

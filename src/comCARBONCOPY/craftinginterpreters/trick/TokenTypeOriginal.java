@@ -1,7 +1,7 @@
 package comCARBONCOPY.craftinginterpreters.trick;
 
 /*List of defined token names */
-enum TokenType{
+public enum TokenTypeOriginal {
     //Single char tokens
     LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
     COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,

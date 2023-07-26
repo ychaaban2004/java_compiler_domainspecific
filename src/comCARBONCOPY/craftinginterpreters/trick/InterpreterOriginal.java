@@ -1,19 +1,17 @@
 package comCARBONCOPY.craftinginterpreters.trick;
 
-import static comCARBONCOPY.craftinginterpreters.trick.TokenType.*;
-
-class Interpreter implements Expr.Visitor<Object>{
+public class InterpreterOriginal implements ExprOriginal.Visitor<Object>{
     /*Public API connecting the expression interaction of Interpreter, Expr,
         and Parser to the character consuming program of Trick
     @param: expression - of Expr type
     @return: void
     */
-    void interpret(Expr expression){
+    void interpret(ExprOriginal expression){
         try {
             Object value = evaluate(expression);
             System.out.println(stringify(value));
-        } catch (RuntimeError error) {
-            Trick.runtimeError(error);
+        } catch (RuntimeErrorOriginal error) {
+            TrickOriginal.runtimeError(error);
         }
     }
 
@@ -35,7 +33,7 @@ class Interpreter implements Expr.Visitor<Object>{
     @param: expression object/instance
     @return: instance of Expr accept method
      */
-    private Object evaluate(Expr expr){
+    private Object evaluate(ExprOriginal expr){
         return expr.accept(this);
     }
 
@@ -64,14 +62,14 @@ class Interpreter implements Expr.Visitor<Object>{
      * @param: operator Token, and operand object(s)
      * @return: none
      */
-    private void checkNumberOperand(Token operator, Object operand){
+    private void checkNumberOperand(TokenOriginal operator, Object operand){
         if(operand instanceof Double) return;
-        throw new RuntimeError(operator, "Operand must be a number.");
+        throw new RuntimeErrorOriginal(operator, "Operand must be a number.");
     }
 
-    private void checkNumberOperands(Token operator, Object left, Object right){
+    private void checkNumberOperands(TokenOriginal operator, Object left, Object right){
         if(left instanceof Double && right instanceof Double) return;
-        throw new RuntimeError(operator, "Both operands must be a number.");
+        throw new RuntimeErrorOriginal(operator, "Both operands must be a number.");
     }
 
     /*evaluates literals by returning the value
@@ -79,7 +77,7 @@ class Interpreter implements Expr.Visitor<Object>{
      * @return: literal value of the expression
      */
     @Override
-    public Object visitLiteralExpr(Expr.Literal expr){
+    public Object visitLiteralExpr(ExprOriginal.Literal expr){
         return expr.value;
     }
 
@@ -88,7 +86,7 @@ class Interpreter implements Expr.Visitor<Object>{
      * @return: instance of the evaluation of the subexpression
      */
     @Override
-    public Object visitGroupingExpr(Expr.Grouping expr){
+    public Object visitGroupingExpr(ExprOriginal.Grouping expr){
         return evaluate(expr.expression);
     }
 
@@ -98,7 +96,7 @@ class Interpreter implements Expr.Visitor<Object>{
      * to evaluated subexpression
      */
     @Override
-    public Object visitUnaryExpr(Expr.Unary expr){
+    public Object visitUnaryExpr(ExprOriginal.Unary expr){
         Object right = evaluate(expr.right);
 
         switch(expr.operator.type){
@@ -114,7 +112,7 @@ class Interpreter implements Expr.Visitor<Object>{
     }
 
     @Override
-    public Object visitBinaryExpr(Expr.Binary expr){
+    public Object visitBinaryExpr(ExprOriginal.Binary expr){
         Object left = evaluate(expr.left);
         Object right = evaluate(expr.right);
 
@@ -144,7 +142,7 @@ class Interpreter implements Expr.Visitor<Object>{
                     return (String)left + (String)right;
                 }
 
-            throw new RuntimeError(expr.operator, "Both operands must be strictly numbers or strictly strings.");
+            throw new RuntimeErrorOriginal(expr.operator, "Both operands must be strictly numbers or strictly strings.");
             case SLASH:
                 checkNumberOperands(expr.operator, left, right);
                 return (double)left / (double)right;

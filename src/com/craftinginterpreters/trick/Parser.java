@@ -3,8 +3,7 @@ package com.craftinginterpreters.trick;
 import java.util.List;
 
 import static com.craftinginterpreters.trick.TokenType.*;
-
-public class Parser {
+class Parser {
 
     private static class ParseError extends RuntimeException {}
 
@@ -25,7 +24,6 @@ public class Parser {
             return null;
         }
     }
-
 
     private Expr expression() {
         return equality();
