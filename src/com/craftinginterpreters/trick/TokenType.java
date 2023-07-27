@@ -13,7 +13,7 @@ enum TokenType{
     LESS, LESS_EQUAL,
 
     //Literals.
-    IDENTIFIER, STRING, NUMBER,
+    IDENTIFIER, STRING, CHAR, NUMBER,
 
     //Keyword tokens (reserved names)
     AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,

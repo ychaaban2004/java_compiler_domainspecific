@@ -73,10 +73,10 @@ public class Trick{
         if(hadError) return;
 
         //printing AST for debugging
-        System.out.println(new ASTprinter().print(expression));
+        //System.out.println(new ASTprinter().print(expression));
 
         //this is where the API from Interpreter is implemented
-        //interpreter.interpret(expression);
+        interpreter.interpret(expression);
     }
 
     /*Basic error handling method and its helper, tells your there is an error and where - stdout
