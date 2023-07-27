@@ -1,37 +1,37 @@
 package comCARBONCOPY.craftinginterpreters.trick;
 
 // Temporary AST printer for each expression type using the visitor pattern
-public class ASTprinterOriginal implements ExprOriginal.Visitor<String>{
+class ASTprinter implements Expr.Visitor<String>{
 
-    String print(ExprOriginal expr) {
+    String print(Expr expr) {
         return expr.accept(this);
     }
 
     @Override
-    public String visitBinaryExpr(ExprOriginal.Binary expr) {
+    public String visitBinaryExpr(Expr.Binary expr) {
         return parenthesize(expr.operator.lexeme, expr.left, expr.right);
     }
 
     @Override
-    public String visitGroupingExpr(ExprOriginal.Grouping expr) {
+    public String visitGroupingExpr(Expr.Grouping expr) {
         return parenthesize("group", expr.expression);
     }
 
     @Override
-    public String visitLiteralExpr(ExprOriginal.Literal expr) {
+    public String visitLiteralExpr(Expr.Literal expr) {
         if(expr.value == null) return "nil";
         return expr.value.toString();
     }
 
     @Override
-    public String visitUnaryExpr(ExprOriginal.Unary expr) {
+    public String visitUnaryExpr(Expr.Unary expr) {
         return parenthesize(expr.operator.lexeme, expr.right);
     }
 
-    private String parenthesize(String name, ExprOriginal... exprs) {
+    private String parenthesize(String name, Expr... exprs) {
         StringBuilder builder = new StringBuilder();
         builder.append("(").append(name);
-        for (ExprOriginal expr:exprs) {
+        for (Expr expr:exprs) {
             builder.append(" ");
             builder.append(expr.accept(this));
         }

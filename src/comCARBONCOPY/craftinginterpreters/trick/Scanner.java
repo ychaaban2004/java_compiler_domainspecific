@@ -1,6 +1,6 @@
 package comCARBONCOPY.craftinginterpreters.trick;
 
-import static comCARBONCOPY.craftinginterpreters.trick.TokenTypeOriginal.*;
+import static comCARBONCOPY.craftinginterpreters.trick.TokenType.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,13 +8,13 @@ import java.util.List;
 import java.util.Map;
 
 /*Class where we scan through code and tokenize the source */
-public class ScannerOriginal {
+class Scanner {
     private final String source;
     private final List<TokenOriginal> tokens = new ArrayList<>();
     private int start = 0;
     private int current = 0;
     private int line = 1;
-    private static final Map<String, TokenTypeOriginal> keywords;
+    private static final Map<String, TokenType> keywords;
 
     static{
         keywords = new HashMap<>();
@@ -40,7 +40,7 @@ public class ScannerOriginal {
      * @param: source file - string
      * @return: scanner object - object
      */
-    public ScannerOriginal(String source){
+    public Scanner(String source){
         this.source = source;
     }
 
@@ -127,7 +127,7 @@ public class ScannerOriginal {
                     identifier();
                 }
                 else{
-                    TrickOriginal.error(line, "Unexpected character.");
+                    Trick.error(line, "Unexpected character.");
                 }
                 break;
         }
@@ -146,7 +146,7 @@ public class ScannerOriginal {
      * @param: the enum object of what kind of token we have - enum object
      * @return: none
      */
-    private void addToken(TokenTypeOriginal type){
+    private void addToken(TokenType type){
         addToken(type,null);
     }
 
@@ -156,7 +156,7 @@ public class ScannerOriginal {
      * @param: what token type it is - enum object, object type - object superclass
      * @return: none
      */
-    private void addToken(TokenTypeOriginal type, Object literal){
+    private void addToken(TokenType type, Object literal){
         String text = source.substring(start, current);
         tokens.add(new TokenOriginal(type,text,literal,line));
     }
@@ -200,7 +200,7 @@ public class ScannerOriginal {
         }
 
         if(isAtEnd()){
-            TrickOriginal.error(line, "Unterminated string.");
+            Trick.error(line, "Unterminated string.");
             return;
         }
 
@@ -258,7 +258,7 @@ public class ScannerOriginal {
         while(isAlphaNumeric(peek())) advance();
         //Reserved Words Catcher
         String text = source.substring(start, current);
-        TokenTypeOriginal type = keywords.get(text);
+        TokenType type = keywords.get(text);
         if(type == null) type = IDENTIFIER;
         addToken(type);
     }

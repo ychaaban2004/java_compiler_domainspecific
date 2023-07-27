@@ -1,14 +1,14 @@
 package comCARBONCOPY.craftinginterpreters.trick;
 
-public abstract class ExprOriginal {
+abstract class Expr {
     interface Visitor<R> {
         R visitBinaryExpr(Binary expr);
         R visitGroupingExpr(Grouping expr);
         R visitLiteralExpr(Literal expr);
         R visitUnaryExpr(Unary expr);
     }
-    static class Binary extends ExprOriginal {
-        Binary(ExprOriginal left, TokenOriginal operator, ExprOriginal right) {
+    static class Binary extends Expr {
+        Binary(Expr left, TokenOriginal operator, Expr right) {
             this.left = left;
             this.operator = operator;
             this.right = right;
@@ -19,12 +19,12 @@ public abstract class ExprOriginal {
             return visitor.visitBinaryExpr(this);
         }
 
-        final ExprOriginal left;
+        final Expr left;
         final TokenOriginal operator;
-        final ExprOriginal right;
+        final Expr right;
     }
-    static class Grouping extends ExprOriginal {
-        Grouping(ExprOriginal expression) {
+    static class Grouping extends Expr {
+        Grouping(Expr expression) {
             this.expression = expression;
         }
 
@@ -33,9 +33,9 @@ public abstract class ExprOriginal {
             return visitor.visitGroupingExpr(this);
         }
 
-        final ExprOriginal expression;
+        final Expr expression;
     }
-    static class Literal extends ExprOriginal {
+    static class Literal extends Expr {
         Literal(Object value) {
             this.value = value;
         }
@@ -47,8 +47,8 @@ public abstract class ExprOriginal {
 
         final Object value;
     }
-    static class Unary extends ExprOriginal {
-        Unary(TokenOriginal operator, ExprOriginal right) {
+    static class Unary extends Expr {
+        Unary(TokenOriginal operator, Expr right) {
             this.operator = operator;
             this.right = right;
         }
@@ -59,7 +59,7 @@ public abstract class ExprOriginal {
         }
 
         final TokenOriginal operator;
-        final ExprOriginal right;
+        final Expr right;
     }
 
     abstract <R> R accept(Visitor<R> visitor);

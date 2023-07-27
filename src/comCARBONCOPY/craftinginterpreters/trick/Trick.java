@@ -11,8 +11,8 @@ import java.util.List;
 /*Main Class
  * Runs source code files, and line by line inputs, holds the main method to run
  */
-public class TrickOriginal {
-    private  static  final InterpreterOriginal interpreter = new InterpreterOriginal();
+public class Trick {
+    private  static  final Interpreter interpreter = new Interpreter();
     static boolean hadError = false;
     static boolean hadRuntimeError = false;
 
@@ -63,11 +63,11 @@ public class TrickOriginal {
      * @return: none
      */
     private static void run(String source){
-        ScannerOriginal scanner = new ScannerOriginal(source);
+        Scanner scanner = new Scanner(source);
         List<TokenOriginal> tokens = scanner.scanTokens();
 
-        ParserOriginal parser = new ParserOriginal(tokens);
-        ExprOriginal expression = parser.parse();
+        Parser parser = new Parser(tokens);
+        Expr expression = parser.parse();
 
         //stop all parsing if error occurs for now
         if(hadError) return;
@@ -85,7 +85,7 @@ public class TrickOriginal {
     /*|************************| Include more advanced error reporting, rather than just the line
     specify where excatly in the line with a string message*/
     static void error(TokenOriginal token, String message){
-        if(token.type == TokenTypeOriginal.EOF){
+        if(token.type == TokenType.EOF){
             report(token.line, " at end", message);
         } else{
             report(token.line," at '" + token.lexeme +"'", message);
@@ -96,7 +96,7 @@ public class TrickOriginal {
         hadError = true;
     }
 
-    static void runtimeError(RuntimeErrorOriginal error){
+    static void runtimeError(RuntimeError error){
         System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
         hadRuntimeError = true;
     }

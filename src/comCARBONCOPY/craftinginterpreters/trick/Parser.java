@@ -2,20 +2,20 @@ package comCARBONCOPY.craftinginterpreters.trick;
 
 import java.util.List;
 
-import static comCARBONCOPY.craftinginterpreters.trick.TokenTypeOriginal.*;
+import static comCARBONCOPY.craftinginterpreters.trick.TokenType.*;
 
-public class ParserOriginal {
+class Parser {
 
     private static class ParseError extends RuntimeException {}
 
     private final List<TokenOriginal> tokens;
     private int current = 0;
 
-    public ParserOriginal(List<TokenOriginal> tokens) {
+    public Parser(List<TokenOriginal> tokens) {
         this.tokens = tokens;
     }
 
-    public ExprOriginal parse() {
+    public Expr parse() {
         try {
             return expression();
         } catch (ParseError error) {
@@ -24,78 +24,78 @@ public class ParserOriginal {
     }
 
 
-    private ExprOriginal expression() {
+    private Expr expression() {
         return equality();
     }
 
 
-    private ExprOriginal equality() {
-        ExprOriginal expr = comparison();
+    private Expr equality() {
+        Expr expr = comparison();
         while(match(BANG_EQUAL, EQUAL_EQUAL)) {
             TokenOriginal operator = previous();
-            ExprOriginal right = comparison();
-            expr = new ExprOriginal.Binary(expr, operator, right);
+            Expr right = comparison();
+            expr = new Expr.Binary(expr, operator, right);
         }
         return expr;
     }
 
-    private ExprOriginal comparison() {
-        ExprOriginal expr = term();
+    private Expr comparison() {
+        Expr expr = term();
 
         while(match(GREATER,GREATER_EQUAL, LESS, LESS_EQUAL)) {
             TokenOriginal operator = previous();
-            ExprOriginal right = term();
-            expr = new ExprOriginal.Binary(expr, operator, right);
+            Expr right = term();
+            expr = new Expr.Binary(expr, operator, right);
         }
         return expr;
     }
 
-    private ExprOriginal term() {
-        ExprOriginal expr = factor();
+    private Expr term() {
+        Expr expr = factor();
 
         while(match(MINUS,PLUS)) {
             TokenOriginal operator = previous();
-            ExprOriginal right = factor();
-            expr = new ExprOriginal.Binary(expr, operator, right);
+            Expr right = factor();
+            expr = new Expr.Binary(expr, operator, right);
         }
         return expr;
     }
 
-    private ExprOriginal factor() {
-        ExprOriginal expr = unary();
+    private Expr factor() {
+        Expr expr = unary();
 
         while(match(SLASH, STAR)) {
             TokenOriginal operator = previous();
-            ExprOriginal right = unary();
-            expr = new ExprOriginal.Binary(expr, operator, right);
+            Expr right = unary();
+            expr = new Expr.Binary(expr, operator, right);
         }
         return expr;
     }
 
-    private ExprOriginal unary() {
+    private Expr unary() {
         if(match(BANG, MINUS)) {
             TokenOriginal operator = previous();
-            ExprOriginal right = unary();
-            return new ExprOriginal.Unary(operator, right);
+            Expr right = unary();
+            return new Expr.Unary(operator, right);
         }
         return primary();
     }
 
-    private ExprOriginal primary() {
-        if(match(FALSE)) return new ExprOriginal.Literal(false);
-        if(match(TRUE)) return new ExprOriginal.Literal(true);
-        if(match(NIL)) return new ExprOriginal.Literal(null);
-        if(match(NUMBER, STRING)) return new ExprOriginal.Literal(previous().literal);
+    private Expr primary() {
+        if(match(FALSE)) return new Expr.Literal(false);
+        if(match(TRUE)) return new Expr.Literal(true);
+        if(match(NIL)) return new Expr.Literal(null);
+        if(match(NUMBER, STRING)) return new Expr.Literal(previous().literal);
         if(match(LEFT_PAREN)) {
-            ExprOriginal expr = expression();
+            Expr expr = expression();
             consume(RIGHT_PAREN, "Expect ')' after expression.");
-            return new ExprOriginal.Grouping(expr);
+            return new Expr.Grouping(expr);
         }
         throw error(peek(), "Expect expression.");
     }
 
-    private boolean match(TokenTypeOriginal... types) {
-        for(TokenTypeOriginal type: types) {
+    private boolean match(TokenType... types) {
+        for(TokenType type: types) {
             if(check(type)) {
                 advance();
                 return true;
@@ -104,14 +104,14 @@ public class ParserOriginal {
         return false;
     }
 
-    private TokenOriginal consume(TokenTypeOriginal type, String message) {
+    private TokenOriginal consume(TokenType type, String message) {
         if(check(type)) return advance();
 
         throw error(peek(), message);
 
     }
 
-    private boolean check(TokenTypeOriginal type) {
+    private boolean check(TokenType type) {
         if(isAtEnd()) return false;
         return peek().type == type;
     }
@@ -134,7 +134,7 @@ public class ParserOriginal {
     }
 
     private ParseError error(TokenOriginal token, String message) {
-        TrickOriginal.error(token, message);
+        Trick.error(token, message);
         return new ParseError();
     }
 
