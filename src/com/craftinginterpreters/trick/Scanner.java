@@ -37,7 +37,7 @@ class Scanner {
         keywords.put("while",  WHILE);
     }
 
-    /**
+    /*
      * Construct will instantiate the source code with the provided source file for each scanner object
      * @param source file - string
      * @return scanner object - object
