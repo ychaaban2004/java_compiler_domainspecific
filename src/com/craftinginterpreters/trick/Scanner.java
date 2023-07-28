@@ -235,25 +235,23 @@ class Scanner {
         else{
             if(isAtEnd()){
                 Trick.error(line, "Unterminated char");
-                return;
             }
             else{
                 Trick.error(line, "No expression given to char");
                 advance();
-                return;
             }
+            return;
         }
         if(!isAtEnd() && peek() != '\'' ){
             while(peek() != '\'' && !isAtEnd()) advance();
             if(isAtEnd()){
                 Trick.error(line, "Unterminated char");
-                return;
             }
             else{
                 Trick.error(line, "Invalid char");
                 advance();
-                return;
             }
+            return;
         }
         else if(isAtEnd()){
             Trick.error(line, "Unterminated char");

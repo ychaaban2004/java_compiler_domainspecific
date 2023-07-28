@@ -9,7 +9,7 @@ class Token {
 
     /*Construct to instantiate token objectts with passed values for instance field instantiation
      * @param: token type - trick's enum object, lexeme name - string, line number - int
-     * @return: toke - object
+     * @return: token - object
      */
     Token(TokenType type, String lexeme, Object literal, int line){
         this.type = type;
