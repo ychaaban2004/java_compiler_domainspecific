@@ -141,6 +141,9 @@ class Interpreter implements Expr.Visitor<Object>{
                 if(left instanceof String || right instanceof String){ //allows for things like hello + 4
                     return stringify(left) + stringify(right);
                 }
+                if(left instanceof Character || right instanceof Character){
+                    return stringify(left) + stringify(right);
+                }
 
             throw new RuntimeError(expr.operator, "Operands must be a string/number.");
             case SLASH:

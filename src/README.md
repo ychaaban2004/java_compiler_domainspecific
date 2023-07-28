@@ -20,17 +20,19 @@ Please note this language is built upon following the following source very clos
         Boolean	        Boolean
         number	        Double
         string	        String
+        char            Character
 
 ###      Truth?
         Any boolean false and nil value are considered false while all else is true
 
-###      String Manipulation:
+###      String/Char Manipulation:
 
-        Arithemtic a + b also works to concatenate two strings
+        Arithemtic a + b also works to concatenate string and chars with any other string,char, or number to create a final string
 
 ###     Numbers/Arithmetic
         All numbers are doubles
-        Supports checking for equality/inequality (=/!=) between any types - i.e check for 3 = three (Reals on ##Truth? logic)
+        Supports checking for equality/inequality 
+                (=/!=) between any types - i.e check for 3 = three (Reals on ##Truth? logic)
 
 ###     Exit Codes
         65: Syntax error while scanning

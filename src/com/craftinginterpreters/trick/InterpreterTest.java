@@ -19,4 +19,10 @@ class InterpreterTest {
         Object added = binaryInterpreter("\"String \"+4");
         Assertions.assertEquals("String 4",added);
     }
+
+    @Test
+    public void charNumberStringCombine(){
+        Object added = binaryInterpreter("'a' + 2 + \"string\"");
+        Assertions.assertEquals("a2string",added);
+    }
 }
