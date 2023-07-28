@@ -1,10 +1,5 @@
 package com.craftinginterpreters.trick;
 
-import com.craftinginterpreters.trick.Expr;
-import com.craftinginterpreters.trick.Parser;
-import com.craftinginterpreters.trick.Scanner;
-import com.craftinginterpreters.trick.Token;
-import com.craftinginterpreters.trick.TokenType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
