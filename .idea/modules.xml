@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Java_Compile_DomainSpecific.iml" filepath="$PROJECT_DIR$/Java_Compile_DomainSpecific.iml" />
-      <module fileurl="file://$USER_HOME$/openai-quickstart-node/openai-quickstart-node.iml" filepath="$USER_HOME$/openai-quickstart-node/openai-quickstart-node.iml" />
     </modules>
   </component>
 </project>

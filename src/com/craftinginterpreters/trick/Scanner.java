@@ -105,6 +105,10 @@ class Scanner {
                 if(match('/')){
                     while(peek() != '\n' && !isAtEnd()) advance();
                 }
+              /*  else if(match('*')){
+                    advance();
+                    while(peek() != '*' && peekNext() != '/' && !isAtEnd()) advance();
+                }*/
                 else{
                     addToken(SLASH);
                 }
