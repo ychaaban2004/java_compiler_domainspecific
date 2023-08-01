@@ -1,18 +1,29 @@
 package comCARBONCOPY.craftinginterpreters.trick;
 
-class Interpreter implements Expr.Visitor<Object>{
-    /*Public API connecting the expression interaction of Interpreter, Expr,
-        and Parser to the character consuming program of Trick
-    @param: expression - of Expr type
-    @return: void
+import java.util.List;
+
+class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
+    /*Public API connecting the statements generated from tokens and
+    * then sending them to be executed as a program
+    * @param: expression - of Expr type
+    * @return: void
     */
-    void interpret(Expr expression){
-        try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
-        } catch (RuntimeError error) {
+    void interpret(List<Stmt> statements){
+        try{
+            for (Stmt statement : statements){
+                execute(statement);
+            }
+        } catch (RuntimeError error){
             Trick.runtimeError(error);
         }
+    }
+
+    /*Helper function to send statments to acceptor and get visitor pattern running
+    * @param: statement object to consume - Stmt
+    * @return: none
+    */
+    private void execute(Stmt stmt){
+        stmt.accept(this);
     }
 
     private String stringify(Object object){
@@ -62,14 +73,32 @@ class Interpreter implements Expr.Visitor<Object>{
      * @param: operator Token, and operand object(s)
      * @return: none
      */
-    private void checkNumberOperand(TokenOriginal operator, Object operand){
+    private void checkNumberOperand(Token operator, Object operand){
         if(operand instanceof Double) return;
         throw new RuntimeError(operator, "Operand must be a number.");
     }
 
-    private void checkNumberOperands(TokenOriginal operator, Object left, Object right){
+    private void checkNumberOperands(Token operator, Object left, Object right){
         if(left instanceof Double && right instanceof Double) return;
         throw new RuntimeError(operator, "Both operands must be a number.");
+    }
+
+    /*implements abstract Stmt interface, by evaluating expression or printing out the statment
+    * as appropriate
+    * @param: Expression subclass of Stmt object
+    * @return: none
+    */
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt){
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
     }
 
     /*evaluates literals by returning the value

@@ -64,15 +64,15 @@ public class Trick {
      */
     private static void run(String source){
         Scanner scanner = new Scanner(source);
-        List<TokenOriginal> tokens = scanner.scanTokens();
+        List<Token> tokens = scanner.scanTokens();
 
         Parser parser = new Parser(tokens);
-        Expr expression = parser.parse();
+        List<Stmt> statements = parser.parse();
 
         //stop all parsing if error occurs for now
         if(hadError) return;
         //this is where the API from Interpreter is implemented
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
     }
 
     /*Basic error handling method and its helper, tells your there is an error and where - stdout
@@ -84,7 +84,7 @@ public class Trick {
     }
     /*|************************| Include more advanced error reporting, rather than just the line
     specify where excatly in the line with a string message*/
-    static void error(TokenOriginal token, String message){
+    static void error(Token token, String message){
         if(token.type == TokenType.EOF){
             report(token.line, " at end", message);
         } else{

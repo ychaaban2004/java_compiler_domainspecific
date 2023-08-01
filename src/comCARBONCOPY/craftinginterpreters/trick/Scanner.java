@@ -10,7 +10,7 @@ import java.util.Map;
 /*Class where we scan through code and tokenize the source */
 class Scanner {
     private final String source;
-    private final List<TokenOriginal> tokens = new ArrayList<>();
+    private final List<Token> tokens = new ArrayList<>();
     private int start = 0;
     private int current = 0;
     private int line = 1;
@@ -49,13 +49,13 @@ class Scanner {
      * @param: none
      * @return: list of token classes - list<class>
      */
-    public List<TokenOriginal> scanTokens(){
+    public List<Token> scanTokens(){
         while(!isAtEnd()){
             start = current;
             scanToken();
         }
 
-        tokens.add(new TokenOriginal(EOF, "", null, line));
+        tokens.add(new Token(EOF, "", null, line));
         return tokens;
     }
 
@@ -158,7 +158,7 @@ class Scanner {
      */
     private void addToken(TokenType type, Object literal){
         String text = source.substring(start, current);
-        tokens.add(new TokenOriginal(type,text,literal,line));
+        tokens.add(new Token(type,text,literal,line));
     }
 
     /*Checks for more complex operations such as != and <= treating

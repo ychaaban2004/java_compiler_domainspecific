@@ -1,9 +1,9 @@
 package comCARBONCOPY.craftinginterpreters.trick;
 
 class RuntimeError extends RuntimeException{
-    final TokenOriginal token;
+    final Token token;
 
-    RuntimeError(TokenOriginal token, String message){
+    RuntimeError(Token token, String message){
         super(message);
         this.token = token;
     }

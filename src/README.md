@@ -14,6 +14,8 @@ Please note this language is built upon following the following source very clos
 
         While most of the language follows conventional Java implementation there are notable differences
 
+
+
 ###      Trick type	Java representation
 ####    Any Lox value: ||||||||||||||||   Object:
         nil	                null
@@ -22,12 +24,20 @@ Please note this language is built upon following the following source very clos
         string	        String
         char            Character
 
+### Variable Declaration
+    variables of any time are declared using "var" keyword
+        operations can be used within declaration: i.e var result = 1 + 1
+
 ###      Truth?
         Any boolean false and nil value are considered false while all else is true
 
 ###      String/Char Manipulation:
 
         Arithemtic a + b also works to concatenate string and chars with any other string,char, or number to create a final string
+
+### NUMBER LITERALS:
+    when performing method calls on numbers, negation will not take precendence over the method
+    i.e: print -123.abs(); --> -123
 
 ###     Numbers/Arithmetic
         All numbers are doubles
@@ -63,12 +73,6 @@ Extra Functionality - Finish by June 14th
 Chapter 4 Complete
 Char Tokenization Complete - not formally tested
 
-
-## Documentation
-
-NUMBER LITERALS:
-when performing method calls on numbers, negation will not take precendence over the method
-i.e: print -123.abs(); --> -123
 
 ## FORMALLY UNTESTED SECTIONS
 
