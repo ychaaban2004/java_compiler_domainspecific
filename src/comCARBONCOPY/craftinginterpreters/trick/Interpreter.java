@@ -3,6 +3,8 @@ package comCARBONCOPY.craftinginterpreters.trick;
 import java.util.List;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
+    private Environment environment = new Environment();
+
     /*Public API connecting the statements generated from tokens and
     * then sending them to be executed as a program
     * @param: expression - of Expr type
@@ -93,12 +95,36 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         evaluate(stmt.expression);
         return null;
     }
-
+/*^^ nearly identical ^^*/
     @Override
     public Void visitPrintStmt(Stmt.Print stmt) {
         Object value = evaluate(stmt.expression);
         System.out.println(stringify(value));
         return null;
+    }
+
+    /*Variable initializer
+    * @param: Stmt object of the variable
+    * @return: Void - null
+    */
+    @Override
+    public Void visitVarStmt(Stmt.Var stmt){
+        Object value = null;
+        if(stmt.initializer != null){
+            value = evaluate(stmt.initializer);
+        }
+
+        environment.define(stmt.name.lexeme, value );
+        return null;
+    }
+
+    /*Variable retrieval for expressions
+    * @param: Expr object of the variable
+    * @return: Object value of the variable
+    */
+    @Override
+    public Object visitVariableExpr(Expr.Variable expr){
+        return environment.get(expr.name);
     }
 
     /*evaluates literals by returning the value
