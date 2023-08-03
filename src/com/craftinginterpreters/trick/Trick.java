@@ -51,8 +51,8 @@ public class Trick{
         for(;;){
             System.out.print("> ");
             String line = reader.readLine();
-            if(line == null) break;
-            run(line); //|&&&&&&| hadError exit needed here?
+            if(line == null || line.equals("/0")) break;
+            run(line);
             hadError = false;
         }
 

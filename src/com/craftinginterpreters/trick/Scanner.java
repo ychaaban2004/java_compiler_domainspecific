@@ -89,6 +89,7 @@ class Scanner {
             case '+': addToken(PLUS); break;
             case ';': addToken(SEMICOLON); break;
             case '*': addToken(STAR); break;
+            case '%': addToken(MODULO); break;
             case '!':
                 addToken(match('=') ? BANG_EQUAL: BANG);
                 break;
@@ -113,7 +114,7 @@ class Scanner {
                     addToken(SLASH);
                 }
                 break;
-            //below skips over chars we dont care about: i.e whitespace
+            //below skips over chars we don't care about: i.e. whitespace
             case ' ':
             case '\r':
             case '\t':

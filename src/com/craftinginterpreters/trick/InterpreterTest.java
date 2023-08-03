@@ -26,8 +26,4 @@ class InterpreterTest {
         Assertions.assertEquals("a2string",added);
     }
 
-    @Test
-    public void varReinitializeFail(){
-
-    }
 }

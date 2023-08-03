@@ -6,7 +6,7 @@ Programming Language Developed: Trick - a domain specific version of Java
 
 ## Credits
 
-Please note this language is built upon following the following source very closesly and the credit for the basics functionality and design of the compiler goes to this source:
+Please note this language is built upon following the following source very closely and the credit for the basics functionality and design of the compiler goes to this source:
 
 [Crafting Interpreters](https://craftinginterpreters.com/)
 
@@ -14,7 +14,9 @@ Please note this language is built upon following the following source very clos
 
         While most of the language follows conventional Java implementation there are notable differences
 
-
+###   REPL Session Notes
+      If you wish to end your REPL session, enter "/0" in a line on its
+      and it will end the session.
 
 ###      Trick type	Java representation
 ####    Any Lox value: ||||||||||||||||   Object:
@@ -55,7 +57,7 @@ HEAD NOTES FOR DEVELOPERS:
   -Any mention of ?!?!?!?!?! indicates a new addition that needs to be tested
 
 IDEAS FOR IMPLEMENTATION:
-- To quote Crafting Interpreters "Ideally, we would have an actual abstraction, some kind of “ErrorReporter” interface that gets passed to the scanner and parser so that we can swap out different reporting strategies." - may be an opporutnity for AI to play a role
+- To quote Crafting Interpreters "Ideally, we would have an actual abstraction, some kind of “ErrorReporter” interface that gets passed to the scanner and parser so that we can swap out different reporting strategies." - may be an opportunity for AI to play a role
 
 
 ## Planning

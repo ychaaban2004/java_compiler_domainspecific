@@ -4,7 +4,7 @@ package com.craftinginterpreters.trick;
 enum TokenType{
     //Single char tokens
     LEFT_PAREN, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
-    COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
+    COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR, MODULO,
 
     //one/two char tokens
     BANG, BANG_EQUAL,

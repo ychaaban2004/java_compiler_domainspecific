@@ -118,7 +118,7 @@ class Parser {
                 Token name = ((Expr.Variable)expr).name;
                 return new Expr.Assign(name, value);
             }
-            //Not thrown as we don need to enter panic mode  if we have not assigned properly, can easily resolve from this.
+            //Not thrown as we don't need to enter panic mode  if we have not assigned properly, can easily resolve from this.
             error(equals, "Invalid assignment target.");
         }
 
@@ -152,7 +152,7 @@ class Parser {
     }
 
     private Expr factor() {
-        return binaryOperation(this::unary,SLASH,STAR);
+        return binaryOperation(this::unary,SLASH,STAR,MODULO);
     }
 
     private Expr unary() {
