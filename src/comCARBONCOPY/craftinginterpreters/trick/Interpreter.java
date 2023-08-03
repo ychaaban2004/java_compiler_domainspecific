@@ -28,6 +28,19 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         stmt.accept(this);
     }
 
+    void executeBlock(List<Stmt> statements, Environment environment){
+        Environment previous = this.environment;
+        try{
+            this.environment = environment;
+
+            for(Stmt statement : statements){
+                execute(statement);
+            }
+        } finally{
+            this.environment = previous;
+        }
+    }
+
     private String stringify(Object object){
         if(object == null) return "nil";
 
@@ -85,6 +98,12 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         throw new RuntimeError(operator, "Both operands must be a number.");
     }
 
+    @Override
+    public Void visitBlockStmt(Stmt.Block stmt) {
+        executeBlock(stmt.statements, new Environment(environment));
+        return null;
+    }
+
     /*implements abstract Stmt interface, by evaluating expression or printing out the statment
     * as appropriate
     * @param: Expression subclass of Stmt object
@@ -116,6 +135,17 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
         environment.define(stmt.name.lexeme, value );
         return null;
+    }
+
+    /*Similar to variable initializer except no new var is defined, and we must assign
+    * @param: Expr of the assign abstract subclass
+    * @return: the object value of the var - check documentation on variables about this
+    */
+    @Override
+    public Object visitAssignExpr(Expr.Assign expr){
+        Object value = evaluate(expr.value);
+        environment.assign(expr.name, value);
+        return value;
     }
 
     /*Variable retrieval for expressions

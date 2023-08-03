@@ -3,7 +3,16 @@ package comCARBONCOPY.craftinginterpreters.trick;
 import java.util.HashMap;
 import java.util.Map;
 public class Environment {
+    final Environment enclosing;
     private  final Map<String,Object> values = new HashMap<>();
+
+    Environment(){
+        enclosing = null;
+    }
+
+    Environment(Environment enclosing){
+        this.enclosing = enclosing;
+    }
 
     /*Get variable value if found otherwise throws run time error
     * @param: Token object of variable
@@ -13,7 +22,25 @@ public class Environment {
         if(values.containsKey(name.lexeme)){
             return values.get(name.lexeme);
         }
+        if(enclosing != null) return enclosing.get(name);
+
         throw new RuntimeError(name,"Undefined variable '" + name.lexeme + "'.");
+    }
+    /*Similar to define a new variable except we cant make new ones only assign existing ones
+    * @param: Token name of var, Object the object value of var
+    * @return: none*/
+    void assign(Token name, Object value){
+        if(values.containsKey(name.lexeme)){
+            values.put(name.lexeme,value);
+            return;
+        }
+        if(enclosing != null){
+            enclosing.assign(name, value);
+            return;
+        }
+
+        throw new RuntimeError(name,
+                "Undefined variable '" + name.lexeme + "'.");
     }
 
     /*Puts the name and value in the hashmap environment. SEMANTIC CHOICE:

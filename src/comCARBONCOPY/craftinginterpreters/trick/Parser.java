@@ -58,12 +58,13 @@ class Parser {
         return new Stmt.Var(name,initializer);
     }
 
-    /*Match each statement to its type before putting it in the list
+    /*Match each statement to its type and make a Stmt object of it before putting it in the list
     * @param: none
     * @return: Stmt object
     */
     private Stmt statement(){
         if(match(PRINT)) return printStatement();
+        if(match(LEFT_BRACE)) return new Stmt.Block(block());
 
         return expressionStatement();
     }
@@ -88,10 +89,37 @@ class Parser {
         return new Stmt.Expression(expr);
     }
 
-    private Expr expression() {
-        return equality();
+    private List<Stmt> block(){
+        List<Stmt> statements = new ArrayList<>();
+
+        while (!check(RIGHT_BRACE) && !isAtEnd()){
+            statements.add(declaration());
+        }
+
+        consume(RIGHT_BRACE,"Expect '}' after block.");
+        return statements;
     }
 
+    private Expr expression() {
+        return assignment();
+    }
+
+    private Expr assignment(){
+        Expr expr = equality();
+
+        if(match(EQUAL)){
+            Token equals = previous();
+            Expr value = assignment();
+
+            if(expr instanceof Expr.Variable){
+                Token name = ((Expr.Variable)expr).name;
+                return new Expr.Assign(name, value);
+            }
+            //DON'T throw the error as we don't need to enter panic mode and can recover smoothly
+            error(equals,"Invalid assignment target.");
+        }
+        return expr;
+    }
 
     private Expr equality() {
         Expr expr = comparison();

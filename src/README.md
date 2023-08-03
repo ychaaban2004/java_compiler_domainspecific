@@ -28,6 +28,9 @@ Please note this language is built upon following the following source very clos
     variables of any time are declared using "var" keyword
         operations can be used within declaration: i.e var result = 1 + 1
 
+    NOTE: Variable declaration can be nested - i.e [print a = 2]
+            is valid assuming a is a defined variable
+
 ###      Truth?
         Any boolean false and nil value are considered false while all else is true
 
