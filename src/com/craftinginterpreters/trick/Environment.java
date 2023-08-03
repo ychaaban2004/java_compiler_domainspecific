@@ -1,7 +1,9 @@
-package comCARBONCOPY.craftinginterpreters.trick;
+package com.craftinginterpreters.trick;
+
 
 import java.util.HashMap;
 import java.util.Map;
+
 public class Environment {
     final Environment enclosing;
     private  final Map<String,Object> values = new HashMap<>();

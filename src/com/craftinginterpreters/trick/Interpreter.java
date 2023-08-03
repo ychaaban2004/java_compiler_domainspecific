@@ -1,20 +1,44 @@
 package com.craftinginterpreters.trick;
 
-class Interpreter implements Expr.Visitor<Object>{
+import java.util.List;
+
+class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
+    private Environment environment = new Environment();
     /*Public API connecting the expression interaction of Interpreter, Expr,
         and Parser to the character consuming program of Trick
     @param: expression - of Expr type
     @return: void
     */
-    void interpret(Expr expression){
-        try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
-        } catch (RuntimeError error) {
+    void interpret(List<Stmt> statements){
+        try{
+            for (Stmt statement : statements){
+                execute(statement);
+            }
+        } catch (RuntimeError error){
             Trick.runtimeError(error);
         }
     }
 
+    /*Helper function to send statments to acceptor and get visitor pattern running
+     * @param: statement object to consume - Stmt
+     * @return: none
+     */
+    private void execute(Stmt stmt){
+        stmt.accept(this);
+    }
+
+    void executeBlock(List<Stmt> statements, Environment environment){
+        Environment previous = this.environment;
+        try{
+            this.environment = environment;
+
+            for(Stmt statement : statements){
+                execute(statement);
+            }
+        } finally{
+            this.environment = previous;
+        }
+    }
     private String stringify(Object object){
         if(object == null) return "nil";
 
@@ -72,6 +96,66 @@ class Interpreter implements Expr.Visitor<Object>{
         throw new RuntimeError(operator, "Both operands must be a number.");
     }
 
+    @Override
+    public Void visitBlockStmt(Stmt.Block stmt) {
+        executeBlock(stmt.statements, new Environment(environment));
+        return null;
+    }
+
+    /*implements abstract Stmt interface, by evaluating expression or printing out the statment
+     * as appropriate
+     * @param: Expression subclass of Stmt object
+     * @return: none
+     */
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt){
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    /*^^ nearly identical ^^*/
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
+    }
+
+    /*Variable initializer
+     * @param: Stmt object of the variable
+     * @return: Void - null
+     */
+    @Override
+    public Void visitVarStmt(Stmt.Var stmt){
+        Object value = null;
+        if(stmt.initializer != null){
+            value = evaluate(stmt.initializer);
+        }
+
+        environment.define(stmt.name.lexeme, value );
+        return null;
+    }
+
+    /*Similar to variable initializer except no new var is defined, and we must assign
+     * @param: Expr of the assign abstract subclass
+     * @return: the object value of the var - check documentation on variables about this
+     */
+    @Override
+    public Object visitAssignExpr(Expr.Assign expr){
+        Object value = evaluate(expr.value);
+        environment.assign(expr.name, value);
+        return value;
+    }
+
+    /*Variable retrieval for expressions
+     * @param: Expr object of the variable
+     * @return: Object value of the variable
+     */
+    @Override
+    public Object visitVariableExpr(Expr.Variable expr){
+        return environment.get(expr.name);
+    }
+
     /*evaluates literals by returning the value
      * @param: expression object belonging to literal subclass
      * @return: literal value of the expression
@@ -99,12 +183,12 @@ class Interpreter implements Expr.Visitor<Object>{
     public Object visitUnaryExpr(Expr.Unary expr){
         Object right = evaluate(expr.right);
 
-        switch(expr.operator.type){
+        switch (expr.operator.type) {
             case BANG:
                 return !isTruthy(right);
             case MINUS:
-                checkNumberOperand(expr.operator,right);
-                return -(double)right;
+                checkNumberOperand(expr.operator, right);
+                return -(double) right;
         }
 
         //Unreachable for whatever reason - satisfying method return syntax
@@ -148,6 +232,9 @@ class Interpreter implements Expr.Visitor<Object>{
             throw new RuntimeError(expr.operator, "Operands must be a string/number.");
             case SLASH:
                 checkNumberOperands(expr.operator, left, right);
+                if((double)right == 0.0){
+                    Trick.error(expr.operator.line,"Dividing by zero is invalid and will produce infinity as a compensation.");
+                }
                 return (double)left / (double)right;
             case STAR:
                 checkNumberOperands(expr.operator, left, right);

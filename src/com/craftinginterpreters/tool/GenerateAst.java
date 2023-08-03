@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
-public class GenerateAst {
+class GenerateAst {
     public static void main(String[] args) throws IOException {
         if(args.length != 1){
             System.err.println("Usage: generate_ast <output directory>");
@@ -13,10 +13,18 @@ public class GenerateAst {
         }
         String outputDir = args[0];
         defineAst(outputDir, "Expr", Arrays.asList(
+                "Assign   : Token name, Expr value",
                 "Binary   : Expr left, Token operator, Expr right",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
-                "Unary    : Token operator, Expr right"
+                "Unary    : Token operator, Expr right",
+                "Variable : Token name"
+        ));
+        defineAst(outputDir,"Stmt", Arrays.asList(
+                "Block      : List<Stmt> statements",
+                "Expression : Expr expression",
+                "Print      : Expr expression",
+                "Var        : Token name, Expr initializer"
         ));
     }
 
@@ -25,7 +33,7 @@ public class GenerateAst {
         String path = outputDir + "/" + baseName + ".java";
         PrintWriter writer = new PrintWriter(path, "UTF-8");
 
-        writer.println("package comCARBONCOPY.craftinginterpreters.trick;");
+        writer.println("package com.craftinginterpreters.trick;");
         writer.println();
         writer.println("import java.util.List;");
         writer.println();

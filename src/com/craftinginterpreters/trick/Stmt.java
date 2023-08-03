@@ -1,4 +1,4 @@
-package comCARBONCOPY.craftinginterpreters.trick;
+package com.craftinginterpreters.trick;
 
 import java.util.List;
 

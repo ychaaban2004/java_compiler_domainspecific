@@ -1,11 +1,12 @@
 package com.craftinginterpreters.trick;
 
 // Temporary AST printer for each expression type using the visitor pattern
-public class ASTprinter implements Expr.Visitor<String>{
+class ASTprinter implements Expr.Visitor<String>{
 
     String print(Expr expr) {
         return expr.accept(this);
     }
+
 
     @Override
     public String visitBinaryExpr(Expr.Binary expr) {
@@ -26,6 +27,15 @@ public class ASTprinter implements Expr.Visitor<String>{
     @Override
     public String visitUnaryExpr(Expr.Unary expr) {
         return parenthesize(expr.operator.lexeme, expr.right);
+    }
+
+    @Override
+    public String visitVariableExpr(Expr.Variable expr) {
+        return parenthesize(expr.name.lexeme, expr);
+    }
+    @Override
+    public String visitAssignExpr(Expr.Assign expr) {
+        return parenthesize(expr.name.lexeme, expr);
     }
 
     private String parenthesize(String name, Expr... exprs) {

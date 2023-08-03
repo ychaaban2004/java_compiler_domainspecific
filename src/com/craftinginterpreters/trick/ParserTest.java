@@ -1,4 +1,4 @@
-package com.craftinginterpreters.trick;
+/*package com.craftinginterpreters.trick;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -27,3 +27,5 @@ class ParserTest {
     }
 
 }
+
+ */

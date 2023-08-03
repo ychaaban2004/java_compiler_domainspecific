@@ -1,8 +1,10 @@
 package com.craftinginterpreters.trick;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.craftinginterpreters.trick.TokenType.*;
+
 class Parser {
 
     private static class ParseError extends RuntimeException {}
@@ -17,23 +19,116 @@ class Parser {
         this.tokens = tokens;
     }
 
-    Expr parse() {
-        try {
-            return expression();
-        } catch (ParseError error) {
+    /*Translation of recursive descent statement parsing rule
+     * If we dont match the token with a type of statement it is assumed to be an expressions statement
+     * @param: none
+     * @return: list of statements - List<Stmt>
+     */
+    public List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()){
+            statements.add(declaration());
+        }
+        return statements;
+    }
+
+    /*Calls for var declaration or statement, and is setup to catch parse errors effectively
+     * implementing the panic mode synchronization as an appropriate reset point
+     * @param: none
+     * @return: Stmt object
+     */
+    private Stmt declaration(){
+        try{
+            if(match(VAR)) return varDeclaration();
+            return statement();
+        } catch (Parser.ParseError error){
+            synchronize();
             return null;
         }
     }
+    /*declares a variable with an identifier name and a value if provided; otherwise null value
+     * @param: none
+     * @return: Stmt var object
+     */
+    private Stmt varDeclaration(){
+        Token name = consume(IDENTIFIER,"Expect variable name.");
+
+        Expr initializer = null;
+        if(match(EQUAL)){
+            initializer = expression();
+        }
+        consume(SEMICOLON, "Expect ';' after variable declaration.");
+        return new Stmt.Var(name,initializer);
+    }
+
+    /*Match each statement to its type and make a Stmt object of it before putting it in the list
+     * @param: none
+     * @return: Stmt object
+     */
+    private Stmt statement(){
+        if(match(PRINT)) return printStatement();
+        if(match(LEFT_BRACE)) return new Stmt.Block(block());
+
+        return expressionStatement();
+    }
+
+    /*ensure we have consumed a print statement ending with ; and returning the Stmt object
+     * @param: none
+     * @return: Stmt object
+     */
+    private Stmt printStatement(){
+        Expr value = expression();
+        consume(SEMICOLON,"Expect ';' after value.");
+        return new Stmt.Print(value);
+    }
+
+    /*ensure we have syntactically consumed an expression and created a Stmt object for it
+     * @param: none
+     * @return: Stmt object
+     */
+    private Stmt expressionStatement(){
+        Expr expr = expression();
+        consume(SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
+    }
+
+    private List<Stmt> block(){
+        List<Stmt> statements = new ArrayList<>();
+
+        while (!check(RIGHT_BRACE) && !isAtEnd()){
+            statements.add(declaration());
+        }
+
+        consume(RIGHT_BRACE,"Expect '}' after block.");
+        return statements;
+    }
 
     private Expr expression() {
-        return equality();
+        return assignment();
+    }
+
+    private Expr assignment() {
+        Expr expr = equality();
+
+        if (match(EQUAL)) {
+            Token equals = previous();
+            Expr value = assignment();
+
+            if (expr instanceof Expr.Variable) {
+                Token name = ((Expr.Variable)expr).name;
+                return new Expr.Assign(name, value);
+            }
+            //Not thrown as we don need to enter panic mode  if we have not assigned properly, can easily resolve from this.
+            error(equals, "Invalid assignment target.");
+        }
+
+        return expr;
     }
 
     /* Helper method optimizing AST build of binary expressions
     * @param:
     * @return:
     * */
-
     private Expr binaryOperation(BinaryOperation opApplier, TokenType... operators){
         Expr expr = opApplier.opApply();
         while(match(operators)){
@@ -74,6 +169,9 @@ class Parser {
         if(match(TRUE)) return new Expr.Literal(true);
         if(match(NIL)) return new Expr.Literal(null);
         if(match(NUMBER, STRING, CHAR)) return new Expr.Literal(previous().literal);
+        if(match(IDENTIFIER)){
+            return new Expr.Variable(previous());
+        }
         if(match(LEFT_PAREN)) {
             Expr expr = expression();
             consume(RIGHT_PAREN, "Expect ')' after expression.");
