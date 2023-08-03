@@ -25,4 +25,9 @@ class InterpreterTest {
         Object added = binaryInterpreter("'a' + 2 + \"string\"");
         Assertions.assertEquals("a2string",added);
     }
+
+    @Test
+    public void varReinitializeFail(){
+
+    }
 }

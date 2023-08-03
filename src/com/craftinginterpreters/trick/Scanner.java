@@ -103,12 +103,12 @@ class Scanner {
                 break;
             case '/':
                 if(match('/')){
+                    if(match('*')){
+                        while(peek() != '*' && peekNext() != '/' && !isAtEnd()) advance();
+                        break;
+                    }
                     while(peek() != '\n' && !isAtEnd()) advance();
                 }
-              /*  else if(match('*')){
-                    advance();
-                    while(peek() != '*' && peekNext() != '/' && !isAtEnd()) advance();
-                }*/
                 else{
                     addToken(SLASH);
                 }

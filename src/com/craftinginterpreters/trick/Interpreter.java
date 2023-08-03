@@ -132,7 +132,11 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             value = evaluate(stmt.initializer);
         }
 
-        environment.define(stmt.name.lexeme, value );
+        if(!environment.values.containsKey(stmt.name.lexeme)){
+            environment.define(stmt.name.lexeme, value );
+        } else{
+         Trick.error(stmt.name.line, "Variable name '" + stmt.name.lexeme +"' has already been defined - cannot be redefined");
+        }
         return null;
     }
 
