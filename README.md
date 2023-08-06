@@ -6,7 +6,7 @@ Programming Language Developed: Trick - a domain specific version of Java
 
 ## Credits
 
-Please note this language is built upon following the following source very closesly and the credit for the basics functionality and design of the compiler goes to this source:
+Please note this language is built upon following the following source very closely and the credit for the basics functionality and design of the compiler goes to this source:
 
 [Crafting Interpreters](https://craftinginterpreters.com/)
 
@@ -14,23 +14,38 @@ Please note this language is built upon following the following source very clos
 
         While most of the language follows conventional Java implementation there are notable differences
 
+###   REPL Session Notes
+      If you wish to end your REPL session, enter "/0" in a line on its
+      and it will end the session.
+
 ###      Trick type	Java representation
 ####    Any Lox value: ||||||||||||||||   Object:
         nil	                null
         Boolean	        Boolean
         number	        Double
         string	        String
+        char            Character
+
+### Variable Declaration
+    variables of any time are declared using "var" keyword
+        operations can be used within declaration: i.e var result = 1 + 1
+
 
 ###      Truth?
         Any boolean false and nil value are considered false while all else is true
 
-###      String Manipulation:
+###      String/Char Manipulation:
 
-        Arithemtic a + b also works to concatenate two strings
+        Arithemtic a + b also works to concatenate string and chars with any other string,char, or number to create a final string
+
+### NUMBER LITERALS:
+    when performing method calls on numbers, negation will not take precendence over the method
+    i.e: print -123.abs(); --> -123
 
 ###     Numbers/Arithmetic
         All numbers are doubles
-        Supports checking for equality/inequality (=/!=) between any types - i.e check for 3 = three (Reals on ##Truth? logic)
+        Supports checking for equality/inequality 
+                (=/!=) between any types - i.e check for 3 = three (Reals on ##Truth? logic)
 
 ###     Exit Codes
         65: Syntax error while scanning
@@ -39,10 +54,10 @@ Please note this language is built upon following the following source very clos
 HEAD NOTES FOR DEVELOPERS:
 - Any mention of "|*********|" indicates an area of improvement or advancement  needed for development
 - Any mention of "|&&&&&&&&&| indicates uncertainties or additions needed for basic functionality
--Any mention of ?!?!?!?!?! indicates a new addition that needs to be tested
+  -Any mention of ?!?!?!?!?! indicates a new addition that needs to be tested
 
 IDEAS FOR IMPLEMENTATION:
-- To quote Crafting Interpreters "Ideally, we would have an actual abstraction, some kind of “ErrorReporter” interface that gets passed to the scanner and parser so that we can swap out different reporting strategies." - may be an opporutnity for AI to play a role
+- To quote Crafting Interpreters "Ideally, we would have an actual abstraction, some kind of “ErrorReporter” interface that gets passed to the scanner and parser so that we can swap out different reporting strategies." - may be an opportunity for AI to play a role
 
 
 ## Planning
@@ -61,12 +76,6 @@ Extra Functionality - Finish by June 14th
 Chapter 4 Complete
 Char Tokenization Complete - not formally tested
 
-
-## Documentation
-
-NUMBER LITERALS:
-when performing method calls on numbers, negation will not take precendence over the method
-i.e: print -123.abs(); --> -123
 
 ## FORMALLY UNTESTED SECTIONS
 
