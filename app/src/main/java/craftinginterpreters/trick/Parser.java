@@ -20,7 +20,7 @@ class Parser {
     }
 
     /*Translation of recursive descent statement parsing rule
-     * If we dont match the token with a type of statement it is assumed to be an expressions statement
+     * If we don't match the token with a type of statement it is assumed to be an expressions statement
      * @param: none
      * @return: list of statements - List<Stmt>
      */
@@ -32,7 +32,7 @@ class Parser {
         return statements;
     }
 
-    /*Calls for var declaration or statement, and is setup to catch parse errors effectively
+    /*Calls for var declaration or statement, and is set up to catch parse errors effectively
      * implementing the panic mode synchronization as an appropriate reset point
      * @param: none
      * @return: Stmt object
