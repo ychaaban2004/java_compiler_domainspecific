@@ -18,7 +18,7 @@ Please note this language is built upon following the following source very clos
       If you wish to end your REPL session, enter "/0" in a line on its
       and it will end the session.
 
-###      Trick type	Java representation
+###      Trick type vs Java representation
 ####    Any Lox value: ||||||||||||||||   Object:
         nil	                null
         Boolean	        Boolean
@@ -30,23 +30,40 @@ Please note this language is built upon following the following source very clos
     variables of any time are declared using "var" keyword
         operations can be used within declaration: i.e var result = 1 + 1
 
+### Expressions
+#### If-Else Expressions
+      instead of && / || we will use keywords 'and' / 'or'
+      due to the below section we can even use this for statments like below
+i.e 
+<div>
+print "hi" or 2; // "hi". 
+</div>
 
-###      Truth?
+<div> 
+print nil or "yes" //"yes".
+</div>
+
+####      Truth?
         Any boolean false and nil value are considered false while all else is true
 
-###      String/Char Manipulation:
+####      String/Char Manipulation:
 
         Arithemtic a + b also works to concatenate string and chars with any other string,char, or number to create a final string
 
-### NUMBER LITERALS:
+#### NUMBER LITERALS:
     when performing method calls on numbers, negation will not take precendence over the method
     i.e: print -123.abs(); --> -123
 
-###     Numbers/Arithmetic
+####     Numbers/Arithmetic
         All numbers are doubles
         Supports checking for equality/inequality 
                 (=/!=) between any types - i.e check for 3 = three (Reals on ##Truth? logic)
 
+###   Statements
+####  If-Else Statements
+      Else is always implicitly attached to latest if statment
+      i.e [ if(conidition{} if(condition){} else{} ] else statement
+      belongs to second if statement
 ###     Exit Codes
         65: Syntax error while scanning
         70: Computation error while running the interpreter 

@@ -7,10 +7,14 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
+
+import static craftinginterpreters.trick.TokenType.*;
 
 class InterpreterTest {
     private  static  final Interpreter interpreter = new Interpreter();
+    private  Environment environment = new Environment();
     private final PrintStream standardOut = System.out;
     private final PrintStream standardErr = System.err;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
@@ -37,6 +41,13 @@ class InterpreterTest {
         interpreter.interpret(statements);
     }
 
+    /*private List<Stmt> statementsGenerate(String source){
+        Scanner scanner = new Scanner(source);
+        List<Token> tokens = scanner.scanTokens();
+        Parser parser = new Parser(tokens);
+        return parser.parse();
+    }*/
+
     @Test
     public void stringNumberCombine(){
         interpretToConsole("print \"String \"+4;");
@@ -54,5 +65,13 @@ class InterpreterTest {
         interpretToConsole("var a = 1/0;");
         String expectedOut = "[line 1] Error:Dividing by zero is invalid and will produce infinity as a compensation.";
         Assertions.assertEquals(expectedOut, errStreamCaptor.toString().trim());
+    }
+
+    @Test
+    public void validVisitVarStatement(){
+        Token a_var = new Token(IDENTIFIER,"a",null,1);
+        Stmt.Var valInitVar = new Stmt.Var(a_var,new Expr.Literal(1));
+        interpreter.visitVarStmt(valInitVar);;
+        Assertions.assertEquals(1,environment.values.get("a"));
     }
 }

@@ -66,10 +66,38 @@ class Parser {
      * @return: Stmt object
      */
     private Stmt statement(){
+        if(match(IF)) return  ifStatement();
         if(match(PRINT)) return printStatement();
+        if(match(WHILE)) return whileStatement();
         if(match(LEFT_BRACE)) return new Stmt.Block(block());
 
         return expressionStatement();
+    }
+
+    /*Creates our visitor pattern objects for if-else statements, to be used by Interpreter
+    * @param: none
+    * @return: Stmt object of innermost if-else statement*/
+    private Stmt ifStatement(){
+        consume(LEFT_PAREN, "Expect '(' after 'if'.");
+        Expr condition = expression();
+        consume(RIGHT_PAREN, "Expect ')' after if condition.");
+
+        Stmt thenBranch = statement();
+        Stmt elseBranch = null;
+        if(match(ELSE)){
+            elseBranch = statement();
+        }
+
+        return new Stmt.If(condition,thenBranch,elseBranch);
+    }
+
+    private Stmt whileStatement(){
+        consume(LEFT_PAREN, "Expect '(' after 'while'.");
+        Expr condition = expression();
+        consume(RIGHT_PAREN,"Expect ')' after condition.");
+        Stmt body = statement();
+
+        return new Stmt.While(condition,body);
     }
 
     /*ensure we have consumed a print statement ending with ; and returning the Stmt object
@@ -81,6 +109,8 @@ class Parser {
         consume(SEMICOLON,"Expect ';' after value.");
         return new Stmt.Print(value);
     }
+
+
 
     /*ensure we have syntactically consumed an expression and created a Stmt object for it
      * @param: none
@@ -108,7 +138,7 @@ class Parser {
     }
 
     private Expr assignment() {
-        Expr expr = equality();
+        Expr expr = or();
 
         if (match(EQUAL)) {
             Token equals = previous();
@@ -139,6 +169,9 @@ class Parser {
         return expr;
     }
 
+    private Expr or(){ return  binaryOperation(this::and,OR); }
+
+    private Expr and(){ return binaryOperation(this:: equality, AND); }
     private Expr equality(){
         return binaryOperation(this::comparison,BANG_EQUAL,EQUAL_EQUAL);
     }
