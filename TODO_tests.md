@@ -9,6 +9,6 @@
     Var reinitialization error - in progress
     Modulo Operator - Issue: Prevent Non-integers - in progress
 
-##  Environment - General Tests Nedded
+##  Environment - General Tests Needed
 
 ##  Stmt - General Tests Needed

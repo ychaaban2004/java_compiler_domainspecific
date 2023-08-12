@@ -14,7 +14,6 @@ import static craftinginterpreters.trick.TokenType.*;
 
 class InterpreterTest {
     private  static  final Interpreter interpreter = new Interpreter();
-    private  Environment environment = new Environment();
     private final PrintStream standardOut = System.out;
     private final PrintStream standardErr = System.err;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
@@ -70,8 +69,28 @@ class InterpreterTest {
     @Test
     public void validVisitVarStatement(){
         Token a_var = new Token(IDENTIFIER,"a",null,1);
-        Stmt.Var valInitVar = new Stmt.Var(a_var,new Expr.Literal(1));
-        interpreter.visitVarStmt(valInitVar);;
-        Assertions.assertEquals(1,environment.values.get("a"));
+        Stmt.Var valInitVar = new Stmt.Var(a_var, new Expr.Binary(
+                new Expr.Literal(1.0),
+                new Token(PLUS,"+",null,1),
+                new Expr.Literal(1.0)));
+
+        interpreter.visitVarStmt(valInitVar);
+        interpretToConsole("print a;");
+        String expectedOut = "2";
+        Assertions.assertEquals(expectedOut,outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    public void invalidVarRedeclaration(){
+        Token a_var = new Token(IDENTIFIER,"a",null,1);
+
+        Stmt.Var valInitVar = new Stmt.Var(a_var, new Expr.Literal(1));
+        interpreter.visitVarStmt(valInitVar);
+
+        Stmt.Var valReInit = new Stmt.Var(a_var, new Expr.Literal(2));
+        interpreter.visitVarStmt(valReInit);
+
+        String expectedOut = "[line 1] Error:Variable name 'a' has already been defined - cannot be redefined";
+        Assertions.assertEquals(expectedOut,errStreamCaptor.toString().trim());
     }
 }
