@@ -1,12 +1,20 @@
 package craftinginterpreters.trick;
 
-// Temporary AST printer for each expression type using the visitor pattern
-class ASTprinter implements Expr.Visitor<String>{
+import java.util.List;
 
-    String print(Expr expr) {
-        return expr.accept(this);
+// Temporary AST printer for each expression type using the visitor pattern
+class ASTprinter implements Expr.Visitor<String>, Stmt.Visitor<String>{
+
+    String print(List<Stmt> statements) {
+        for(Stmt statement:statements)
+            return statement.accept(this);
+        return "Done";
     }
 
+    @Override
+    public String visitAssignExpr(Expr.Assign expr) {
+        return parenthesize(expr.name.lexeme, expr);
+    }
 
     @Override
     public String visitBinaryExpr(Expr.Binary expr) {
@@ -38,10 +46,39 @@ class ASTprinter implements Expr.Visitor<String>{
     public String visitVariableExpr(Expr.Variable expr) {
         return parenthesize(expr.name.lexeme, expr);
     }
+
     @Override
-    public String visitAssignExpr(Expr.Assign expr) {
-        return parenthesize(expr.name.lexeme, expr);
+    public String visitBlockStmt(Stmt.Block stmt) {
+        return null;
     }
+    
+    @Override
+    public String visitExpressionStmt(Stmt.Expression stmt) {
+        return stmt.expression.accept(this);
+    }
+
+    @Override
+    public String visitIfStmt(Stmt.If stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitPrintStmt(Stmt.Print stmt) {
+        return null;
+    }
+
+    @Override
+    public String visitVarStmt(Stmt.Var stmt) {
+        return null;
+    }
+    
+    @Override
+    public String visitWhileStmt(Stmt.While stmt) {
+        return null;
+    }
+
+
+
 
     private String parenthesize(String name, Expr... exprs) {
         StringBuilder builder = new StringBuilder();
