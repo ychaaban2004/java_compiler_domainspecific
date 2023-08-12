@@ -12,72 +12,78 @@ Please note this language is built upon following the following source very clos
 
 ## Trick Language Documentation:
 
-        While most of the language follows conventional Java implementation there are notable differences
+While most of the language follows conventional Java implementation there are notable differences
 
 ###   REPL Session Notes
-      If you wish to end your REPL session, enter "/0" in a line on its
-      and it will end the session.
 
-###      Trick type	Java representation
-####    Any Lox value: ||||||||||||||||   Object:
-        nil	                null
-        Boolean	        Boolean
-        number	        Double
-        string	        String
-        char            Character
+If you wish to end your REPL session, enter "/0" in a line on its
+and it will end the session.
+
+### Type conversion
+
+| Trick type     | Java Representation |
+| -------------- | ------------------- |
+| Any Lox value  | Object              |
+| nil            | null                |
+| Boolean        | Boolean             |
+| Number         | Double              |
+| String         | String              |
+| Char           | Char                |
+
+
+
 
 ### Variable Declaration
-    variables of any time are declared using "var" keyword
-        operations can be used within declaration: i.e var result = 1 + 1
+Variables of any time are declared using "var" keyword operations can be used within declaration: i.e var result = 1 + 1
 
 
-###      Truth?
-        Any boolean false and nil value are considered false while all else is true
+### Truth
+Any boolean false and nil value are considered false while all else is true.
 
-###      String/Char Manipulation:
+### String/Char Manipulation
+Arithemtic a + b also works to concatenate string and chars with any other string, char, or number to create a final string.
 
-        Arithemtic a + b also works to concatenate string and chars with any other string,char, or number to create a final string
+### Number Literals
+When performing method calls on numbers, negation will not take precendence over the method i.e: print -123.abs(); --> -123
 
-### NUMBER LITERALS:
-    when performing method calls on numbers, negation will not take precendence over the method
-    i.e: print -123.abs(); --> -123
+### Numbers/Arithmetic
+All numbers are doubles
+Supports checking for equality/inequality. (=/!=) between any types - i.e check for 3 = three (Reals on ##Truth? logic)
 
-###     Numbers/Arithmetic
-        All numbers are doubles
-        Supports checking for equality/inequality 
-                (=/!=) between any types - i.e check for 3 = three (Reals on ##Truth? logic)
+### Exit Codes
+65: Syntax error while scanning
+70: Computation error while running the interpreter 
 
-###     Exit Codes
-        65: Syntax error while scanning
-        70: Computation error while running the interpreter 
+---
 
-HEAD NOTES FOR DEVELOPERS:
+### HEAD NOTES FOR DEVELOPERS:
 - Any mention of "|*********|" indicates an area of improvement or advancement  needed for development
 - Any mention of "|&&&&&&&&&| indicates uncertainties or additions needed for basic functionality
-  -Any mention of ?!?!?!?!?! indicates a new addition that needs to be tested
+- Any mention of ?!?!?!?!?! indicates a new addition that needs to be tested
 
-IDEAS FOR IMPLEMENTATION:
+### IDEAS FOR IMPLEMENTATION:
 - To quote Crafting Interpreters "Ideally, we would have an actual abstraction, some kind of “ErrorReporter” interface that gets passed to the scanner and parser so that we can swap out different reporting strategies." - may be an opportunity for AI to play a role
-
 
 ## Planning
 
+- [x] Chapter 4 (Youssef)
+- [x] Chapter 5 (Ratiq)
+- [x] Chapter 6 (Youssef)
+- [ ] Chapter 7 (Youssef)
+- [ ] Chapter 8 (Ratiq)
+- [ ] Chapter 9 (Ratiq)
+- [ ] Chapter 10 (Youssef) 
 
-Chapter - 5 by 7th June (Ratiq)
-Chapter - 4 by 7th June (Youssef) - DONE
-Extra Functionality - Finish by June 14th
-1. Tokenize Chars - DONE
-2. Unknown characters blob should be reported as one entity rather than individual i.e "これ は　だいじょぶない" - DONE
-3. Specific error reporting
+### Bonus functionality
 
+- [x] Tokenize Chars
+- [x] Unknown characters blob should be reported as one entity rather than individual i.e "これ は　だいじょぶない"
+- [ ] Specific error reporting
 
-## Progress
+### Testing
 
-Chapter 4 Complete
-Char Tokenization Complete - not formally tested
-
-
-## FORMALLY UNTESTED SECTIONS
-
-        -Char tokenization
-        -Blob Reporting
+- [x] Scanner
+- [ ] Parser
+- [ ] Interpreter
+- [ ] Error reporting
+- [ ] Blob reporting

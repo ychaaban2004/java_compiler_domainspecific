@@ -3,12 +3,15 @@ package craftinginterpreters.trick;
 import java.util.List;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
+
     private Environment environment = new Environment();
-    /*Public API connecting the expression interaction of Interpreter, Expr,
-        and Parser to the character consuming program of Trick
-    @param: expression - of Expr type
-    @return: void
-    */
+
+    /*
+     * Public API connecting the expression interaction of Interpreter, Expr,
+     * and Parser to the character consuming program of Trick
+     * @param: expression - of Expr type
+     * @return: void
+     */
     void interpret(List<Stmt> statements){
         try{
             for (Stmt statement : statements){
@@ -19,7 +22,8 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         }
     }
 
-    /*Helper function to send statments to acceptor and get visitor pattern running
+    /*
+     * Helper function to send statments to acceptor and get visitor pattern running
      * @param: statement object to consume - Stmt
      * @return: none
      */
@@ -72,7 +76,8 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return true;
     }
 
-    /*Determines equality and checks for null objects
+    /*
+     * Determines equality and checks for null objects
      * @param: objects to compare
      * @return: equal or not
      */
@@ -82,7 +87,8 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         //the equal method will satisfy our trick documentation
         return a.equals(b);
     }
-    /*Ensures the taken obejcts are actually number (Double) instances
+    /*
+     * Ensures the taken obejcts are actually number (Double) instances
      * @param: operator Token, and operand object(s)
      * @return: none
      */
@@ -102,7 +108,8 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return null;
     }
 
-    /*implements abstract Stmt interface, by evaluating expression or printing out the statment
+    /*
+     * Implements abstract Stmt interface, by evaluating expression or printing out the statment
      * as appropriate
      * @param: Expression subclass of Stmt object
      * @return: none
@@ -178,7 +185,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return evaluate(expr.expression);
     }
 
-    /*evaluates unary cases
+    /* evaluates unary cases
      * @param: expression object belonging to unary subclass
      * @return: instance of the evaluation of unary operator applied
      * to evaluated subexpression
@@ -193,6 +200,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             case MINUS:
                 checkNumberOperand(expr.operator, right);
                 return -(double) right;
+            default: 
         }
 
         //Unreachable for whatever reason - satisfying method return syntax
@@ -233,7 +241,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
                     return stringify(left) + stringify(right);
                 }
 
-            throw new RuntimeError(expr.operator, "Operands must be a string/number.");
+            throw new RuntimeError(expr.operator, "Operands must be a char/string/number.");
             case SLASH:
                 checkNumberOperands(expr.operator, left, right);
                 if((double)right == 0.0){
@@ -246,6 +254,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             case MODULO:
                 checkNumberOperands(expr.operator, left, right);
                 return (double)left % (double) right;
+            default: 
         }
 
         //Unreachable as mentioned in visitUnaryExpr
