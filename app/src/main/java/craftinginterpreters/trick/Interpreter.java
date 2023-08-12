@@ -108,12 +108,24 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return null;
     }
 
+    /*implements if else statement abstract interface execution
+    * @param: Stmt.If object
+    * @return: null*/
+    @Override
+    public Void visitIfStmt(Stmt.If stmt) {
+        if(isTruthy(evaluate(stmt.condition))){
+            execute(stmt.thenBranch);
+        } else if(stmt.elseBranch != null){
+            execute(stmt.elseBranch);
+        }
+        return null;
+    }
+
     /*
      * Implements abstract Stmt interface, by evaluating expression or printing out the statment
      * as appropriate
      * @param: Expression subclass of Stmt object
-     * @return: none
-     */
+     * @return: none*/
     @Override
     public Void visitExpressionStmt(Stmt.Expression stmt){
         evaluate(stmt.expression);
@@ -147,6 +159,17 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return null;
     }
 
+    /*Ensures we execute while loop body under true evaluation result of condition
+    * @param: While object belong to Stmt parent class
+    * @return: null*/
+    @Override
+    public Void visitWhileStmt(Stmt.While stmt){
+        while(isTruthy(evaluate(stmt.condition))){
+            execute(stmt.body);
+        }
+        return null;
+    }
+
     /*Similar to variable initializer except no new var is defined, and we must assign
      * @param: Expr of the assign abstract subclass
      * @return: the object value of the var - check documentation on variables about this
@@ -174,6 +197,19 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     @Override
     public Object visitLiteralExpr(Expr.Literal expr){
         return expr.value;
+    }
+
+    @Override
+    public Object visitLogicalExpr(Expr.Logical expr){
+        Object left = evaluate(expr.left);
+
+        if(expr.operator.type == TokenType.OR){
+            if (isTruthy(left)) return left;
+        } else{
+            if(!isTruthy(left)) return left;
+        }
+
+        return evaluate(expr.right);
     }
 
     /*evaluates parentheses grouping by evaluating subexpression

@@ -104,11 +104,13 @@ class Scanner {
                 break;
             case '/':
                 if(match('/')){
-                    if(match('*')){
-                        while(peek() != '*' && peekNext() != '/' && !isAtEnd()) advance();
-                        break;
-                    }
                     while(peek() != '\n' && !isAtEnd()) advance();
+                }
+                else if(match('*')){
+                    advance();
+                    while(!(peek() == '*' && peekNext() == '/' && !isAtEnd())) advance();
+                    advance();
+                    advance();
                 }
                 else{
                     addToken(SLASH);
@@ -214,7 +216,7 @@ class Scanner {
         //this means we can have multi line strings, may want a different implementation
         // |************|
         while(peek() != '"' && !isAtEnd()){
-            if(peek() == '\n') line++;
+            // if(peek() == '\n') line++;
             advance();
         }
 

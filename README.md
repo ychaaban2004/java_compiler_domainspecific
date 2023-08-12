@@ -36,11 +36,23 @@ and it will end the session.
 ### Variable Declaration
 Variables of any time are declared using "var" keyword operations can be used within declaration: i.e var result = 1 + 1
 
+### Expressions
+#### If-Else Expressions
+      instead of && / || we will use keywords 'and' / 'or'
+      due to the below section we can even use this for statments like below
+i.e 
+<div>
+print "hi" or 2; // "hi". 
+</div>
 
-### Truth
-Any boolean false and nil value are considered false while all else is true.
+<div> 
+print nil or "yes" //"yes".
+</div>
 
-### String/Char Manipulation
+#### Truth?
+Any boolean false and nil value are considered false while all else is true
+
+#### String/Char Manipulation
 Arithemtic a + b also works to concatenate string and chars with any other string, char, or number to create a final string.
 
 ### Number Literals
@@ -49,6 +61,20 @@ When performing method calls on numbers, negation will not take precendence over
 ### Numbers/Arithmetic
 All numbers are doubles
 Supports checking for equality/inequality. (=/!=) between any types - i.e check for 3 = three (Reals on ##Truth? logic)
+
+###   Statements
+####  If-Else Statements
+Else is always implicitly attached to latest if statment.
+
+```java
+//Confused
+if(condition{} if(condition){} else{})
+else
+
+```
+
+[ if(conidition{} if(condition){} else{} ] else statement
+belongs to second if statement
 
 ### Exit Codes
 65: Syntax error while scanning
