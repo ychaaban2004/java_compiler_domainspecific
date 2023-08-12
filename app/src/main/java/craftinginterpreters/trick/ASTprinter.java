@@ -64,12 +64,12 @@ class ASTprinter implements Expr.Visitor<String>, Stmt.Visitor<String>{
 
     @Override
     public String visitPrintStmt(Stmt.Print stmt) {
-        return null;
+        return parenthesize("PRINT", stmt.expression);
     }
 
     @Override
     public String visitVarStmt(Stmt.Var stmt) {
-        return null;
+        return parenthesize(stmt.name.lexeme, stmt.initializer);
     }
     
     @Override
