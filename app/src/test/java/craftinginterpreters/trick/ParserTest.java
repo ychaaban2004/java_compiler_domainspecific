@@ -22,7 +22,26 @@ import java.io.PrintStream;
  * -    () brackets
  * -    ( bracket
  * -    Expect Expression (-)
- * -    
+ * -    Variable (Uninitialised and initialised)
+ * -    for statement - NOT TESTS ALSO ERROR TESTING REQUIRED
+ * -    if statement
+ * -    with and without else statement
+ * -    print statement
+ * -    while statement - NOT TESTED
+ * -    Block statement
+ * -    Variable assignment
+ * -    "Invalid assignment target"
+ * -    Primary variable
+ * -    Expect ';' after loop condition
+ * -    Expect ')' after for clauses.
+ * -    Expect '}' after block.
+ * -    Expect '(' after 'while'.
+ * -    Expect ')' after while condition.
+ * -    Expect '(' after 'if'.
+ * -    Expect ')' after if condition.
+ * -    "Expect variable name."
+ * -    "Expect ';' after variable declaration"
+ * -    Parse error
  */
 
 
@@ -98,6 +117,68 @@ class ParserTest {
         Assertions.assertEquals("(* 10.0 (group (+ 6.0 5.0)))", astBuilider);
     }
 
+    @Test
+    public void validVariable() {
+        List<Stmt> statements = parseExpression("var hello;");
+        String astBuilder = new ASTprinter().print(statements);
+        Assertions.assertEquals("(hello)",astBuilder);
+    }
+
+    @Test
+    public void validVariableInitialised() {
+        List<Stmt> statements = parseExpression("var hello = 5;");
+        String astBuilder = new ASTprinter().print(statements);
+        Assertions.assertEquals("(hello 5.0)",astBuilder);
+    }
+
+    @Test
+    public void validIfStatement() {
+        List<Stmt> statements = parseExpression("if(5 == 5) hello = 1;");
+        String astBuilder = new ASTprinter().print(statements);
+        Assertions.assertEquals("(IF (== 5.0 5.0) (hello 1.0) )",astBuilder);
+    }
+
+    @Test
+    public void validIfElseStatement() {
+        List<Stmt> statements = parseExpression("if(5 == 5) hello = 1; else hello = 2;");
+        String astBuilder = new ASTprinter().print(statements);
+        Assertions.assertEquals("(IF (== 5.0 5.0) (hello 1.0) (hello 2.0))",astBuilder);
+    }
+
+    @Test
+    public void validPrint() {
+        List<Stmt> statements = parseExpression("print \"Hello world\";");
+        String astBuilder = new ASTprinter().print(statements);
+        Assertions.assertEquals("(PRINT Hello world)",astBuilder);
+    }
+
+    @Test
+    public void validBlock() {
+        List<Stmt> statements = parseExpression("{hello = 1;}");
+        String astBuilder = new ASTprinter().print(statements);
+        Assertions.assertEquals("(BLOCK (hello 1.0))",astBuilder);
+    }
+
+    @Test
+    public void validMultilineBlock() {
+        List<Stmt> statements = parseExpression("{hello = 1; world = 2;}");
+        String astBuilder = new ASTprinter().print(statements);
+        Assertions.assertEquals("(BLOCK (hello 1.0) (world 2.0))",astBuilder);
+    }
+
+    @Test
+    public void validMultiline() {
+        List<Stmt> statements = parseExpression("hello = 1; \n {world = 2;}");
+        String astBuilder = new ASTprinter().print(statements);
+        Assertions.assertEquals("(hello 1.0)(BLOCK (world 2.0))",astBuilder);
+    }
+
+    @Test
+    public void validVariableAsPrimary() {
+        List<Stmt> statements = parseExpression("hello = world;");
+        String astBuilder = new ASTprinter().print(statements);
+        Assertions.assertEquals("(hello world)",astBuilder);
+    }
 
     // TODO : FIX THESE TESTS
     // @Test

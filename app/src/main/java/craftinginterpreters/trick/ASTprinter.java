@@ -6,14 +6,15 @@ import java.util.List;
 class ASTprinter implements Expr.Visitor<String>, Stmt.Visitor<String>{
 
     String print(List<Stmt> statements) {
+        StringBuilder sb = new StringBuilder();
         for(Stmt statement:statements)
-            return statement.accept(this);
-        return "Done";
+            sb.append(statement.accept(this));
+        return sb.toString();
     }
 
     @Override
     public String visitAssignExpr(Expr.Assign expr) {
-        return parenthesize(expr.name.lexeme, expr);
+        return parenthesize(expr.name.lexeme, expr.value);
     }
 
     @Override
@@ -44,12 +45,20 @@ class ASTprinter implements Expr.Visitor<String>, Stmt.Visitor<String>{
 
     @Override
     public String visitVariableExpr(Expr.Variable expr) {
-        return parenthesize(expr.name.lexeme, expr);
+        return expr.name.lexeme;
     }
 
     @Override
     public String visitBlockStmt(Stmt.Block stmt) {
-        return null;
+        StringBuilder builder = new StringBuilder();
+        builder.append("(").append("BLOCK");
+        List<Stmt> statements = stmt.statements;
+        for(Stmt statement: statements) {
+            builder.append(" ");
+            builder.append(statement.accept(this));
+        }
+        builder.append(")");
+        return builder.toString();
     }
     
     @Override
@@ -59,7 +68,17 @@ class ASTprinter implements Expr.Visitor<String>, Stmt.Visitor<String>{
 
     @Override
     public String visitIfStmt(Stmt.If stmt) {
-        return null;
+        StringBuilder builder = new StringBuilder();
+        builder.append("(").append("IF");
+        builder.append(" ");
+        builder.append(stmt.condition.accept(this));
+        builder.append(" ");
+        builder.append(stmt.thenBranch.accept(this));
+        builder.append(" ");
+        if(stmt.elseBranch != null)
+            builder.append(stmt.elseBranch.accept(this));
+        builder.append(")");
+        return builder.toString();
     }
 
     @Override
@@ -74,20 +93,27 @@ class ASTprinter implements Expr.Visitor<String>, Stmt.Visitor<String>{
     
     @Override
     public String visitWhileStmt(Stmt.While stmt) {
-        return null;
+        StringBuilder builder = new StringBuilder();
+        builder.append("(").append("WHILE");
+        builder.append(" ");
+        builder.append(stmt.condition.accept(this));
+        builder.append(" ");
+        builder.append(stmt.body.accept(this));
+        builder.append(")");
+        return builder.toString();
     }
-
-
-
 
     private String parenthesize(String name, Expr... exprs) {
         StringBuilder builder = new StringBuilder();
         builder.append("(").append(name);
-        for (Expr expr:exprs) {
-            builder.append(" ");
-            builder.append(expr.accept(this));
+        if(exprs[0] != null) {
+            for (Expr expr:exprs) {
+                builder.append(" ");
+                builder.append(expr.accept(this));
+            }
         }
         builder.append(")");
         return builder.toString();
     }
+
 }
