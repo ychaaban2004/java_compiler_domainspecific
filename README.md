@@ -11,7 +11,8 @@ Please note this language is built upon following the following source very clos
 [Crafting Interpreters](https://craftinginterpreters.com/)
 
 ## Trick Language Documentation:
-
+[Notion Page](https://www.notion.so/Java-Project-028727268099418687937b8b32efb279?pvs=4)
+<div></div>
 While most of the language follows conventional Java implementation there are notable differences
 
 ###   REPL Session Notes
