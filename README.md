@@ -87,13 +87,15 @@ Supports checking for equality/inequality. (=/!=) between any types - i.e check 
 ###   Statements
 ####  If-Else Statements
 Else is always implicitly attached to latest if statment.
+<div> 
+e.g
+</div>
 
 ```java
 //Confused
 if(condition{} if(condition){} else{})
-else
-
 ```
+hence the else statement belongs to the second if condition
 
 [ if(conidition{} if(condition){} else{} ] else statement
 belongs to second if statement
@@ -116,11 +118,12 @@ belongs to second if statement
 
 - [x] Chapter 4 (Youssef)
 - [x] Chapter 5 (Ratiq)
-- [x] Chapter 6 (Youssef)
-- [ ] Chapter 7 (Youssef)
-- [ ] Chapter 8 (Ratiq)
-- [ ] Chapter 9 (Ratiq)
-- [ ] Chapter 10 (Youssef) 
+- [x] Chapter 6 (Ratiq)
+- [x] Chapter 7 (Youssef)
+- [x] Chapter 8 (Youssef)
+- [x] Chapter 9 (Youssef)
+- [ ] Chapter 10 (Ratiq)
+- [ ] Chapter 11 (Youssef)
 
 ### Bonus functionality
 
