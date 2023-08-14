@@ -33,7 +33,7 @@
 - [ ] Char Tests
 - [x] String/Number/Char concatenation
 - [x] Divide by zero error
-- [ ] Var reinitialization error - in progress 
+- [x] Var reinitialization error
 - [ ] Modulo Operator - Issue: Prevent Non-integers - in progress
 
 ##  Environment - General Tests Needed
