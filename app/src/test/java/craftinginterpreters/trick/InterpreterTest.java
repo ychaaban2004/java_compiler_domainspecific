@@ -18,6 +18,9 @@ class InterpreterTest {
     private final PrintStream standardErr = System.err;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errStreamCaptor = new ByteArrayOutputStream();
+    private final static boolean pos = true; boolean neg = false;
+    private final Token andOp = new Token(AND,"and", null, 1);
+    private final Token orOp = new Token(OR,"or",null,1);
 
     @BeforeEach
     public void setUp() {
@@ -73,7 +76,67 @@ class InterpreterTest {
 
     @Test
     public void validVisitWhileStmt(){
-
+        interpretToConsole("var a = 3; var b = 0;");
+        interpretToConsole("while(a != 0){b = b + 1; a = a - 1;}");
+        interpretToConsole("print b;");
+        String expectedOut = "3";
+        Assertions.assertEquals(expectedOut,outputStreamCaptor.toString().trim());
+    }
+    //series of logical expression tests
+    @Test
+    //or operation with true left
+    public void validOr1() {
+        Expr.Logical expression = new Expr.Logical(
+                new Expr.Literal(pos),
+                orOp,
+                new Expr.Literal(neg)
+        );
+        boolean result = (boolean) interpreter.visitLogicalExpr(expression);
+        Assertions.assertEquals(pos, result);
+    }
+    @Test
+    //or operation with true right
+    public void validOr2() {
+        Expr.Logical expression = new Expr.Logical(
+                new Expr.Literal(neg),
+                orOp,
+                new Expr.Literal(pos)
+        );
+        boolean result = (boolean) interpreter.visitLogicalExpr(expression);
+        Assertions.assertEquals(pos, result);
+    }
+    @Test
+    //and operation with false left
+    public void validAnd1() {
+        Expr.Logical expression = new Expr.Logical(
+                new Expr.Literal(neg),
+                andOp,
+                new Expr.Literal(pos)
+        );
+        boolean result = (boolean) interpreter.visitLogicalExpr(expression);
+        Assertions.assertEquals(neg, result);
+    }
+    @Test
+    //and operation with false right
+    public void validAnd2() {
+        Expr.Logical expression = new Expr.Logical(
+                new Expr.Literal(pos),
+                andOp,
+                new Expr.Literal(neg)
+        );
+        boolean result = (boolean) interpreter.visitLogicalExpr(expression);
+        Assertions.assertEquals(neg, result);
+    }
+    @Test
+    //and operation should eval to true
+    public void validAnd3() {
+        Expr.Logical expression = new Expr.Logical(
+                new Expr.Literal(pos),
+                andOp,
+                new Expr.Literal(pos)
+        );
+        boolean result = (boolean) interpreter.visitLogicalExpr(expression);
+        Assertions.assertEquals(pos, result);
     }
 
 

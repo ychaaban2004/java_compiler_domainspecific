@@ -81,7 +81,7 @@ public class Trick{
         interpreter.interpret(statements);
 
         //printing AST for debugging
-        System.out.println(new ASTprinter().print(statements));
+        //System.out.println(new ASTprinter().print(statements));
     }
 
     /*Basic error handling method and its helper, tells your there is an error and where - stdout

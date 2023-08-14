@@ -92,13 +92,9 @@ e.g
 </div>
 
 ```java
-//Confused
 if(condition{} if(condition){} else{})
 ```
 hence the else statement belongs to the second if condition
-
-[ if(conidition{} if(condition){} else{} ] else statement
-belongs to second if statement
 
 ### Exit Codes
 65: Syntax error while scanning
