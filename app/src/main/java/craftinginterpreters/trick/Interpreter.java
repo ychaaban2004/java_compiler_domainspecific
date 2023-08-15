@@ -281,7 +281,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             case SLASH:
                 checkNumberOperands(expr.operator, left, right);
                 if((double)right == 0.0){
-                    Trick.error(expr.operator.line,"Dividing by zero is invalid and will produce infinity as a compensation.");
+                    throw new RuntimeError(expr.operator,"Dividing by zero is not accepted.");
                 }
                 return (double)left / (double)right;
             case STAR:
