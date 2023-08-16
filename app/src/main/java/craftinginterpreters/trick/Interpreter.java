@@ -256,7 +256,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         for(Expr arguement: expr.arguements) {
             arguements.add(evaluate(arguement));
         }
-        LoxCallable function = (LoxCallable) callee;
+        TrickCallable function = (TrickCallable) callee;
         return function.call(this,arguements);
     }
 
