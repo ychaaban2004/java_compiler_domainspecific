@@ -24,13 +24,13 @@
 
 - [ ] Char Tests
 ## Interpreter
-- [ ] General Tests - in progress
+- [x] General Tests - in progress
 
 <div></div>
 
 ### Bonus
 
-- [ ] Char Tests
+- [x] Char Tests
 - [x] String/Number/Char concatenation
 - [x] Divide by zero error
 - [x] Var reinitialization error

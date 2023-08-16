@@ -102,6 +102,11 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         throw new RuntimeError(operator, "Both operands must be a number.");
     }
 
+    private void checkForIntegerOperands(Token operator, Object left, Object right){
+        if(left instanceof Integer && right instanceof Integer) return;
+        throw new RuntimeError(operator,"Both operands must be an integer.");
+    }
+
     @Override
     public Void visitBlockStmt(Stmt.Block stmt) {
         executeBlock(stmt.statements, new Environment(environment));
@@ -288,8 +293,8 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
                 checkNumberOperands(expr.operator, left, right);
                 return (double)left * (double)right;
             case MODULO:
-                checkNumberOperands(expr.operator, left, right);
-                return (double)left % (double) right;
+                checkForIntegerOperands(expr.operator, left, right);
+                return (Integer)left % (Integer)right;
             default: 
         }
 

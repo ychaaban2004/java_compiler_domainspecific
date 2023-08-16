@@ -26,6 +26,7 @@ class InterpreterTest {
        put("or",new Token(OR,"or",null,1));
        put("bang",new Token(BANG,"bang",null,1));
        put("+", new Token(PLUS,"+",null,1));
+       put("%",new Token(MODULO,"%",null,1));
     }};
 
 
@@ -183,6 +184,7 @@ class InterpreterTest {
 
     //BONUS FEATURES BEGIN
     @Test
+    //ensure we cannot redeclare a variable that has already been defined
     public void invalidVarRedeclaration(){
         Token a_var = new Token(IDENTIFIER,"a",null,1);
 
@@ -197,22 +199,39 @@ class InterpreterTest {
     }
 
     @Test
-    public void stringNumberCombine(){
-        interpretToConsole("print \"String \"+4;");
-        Assertions.assertEquals("String 4",outputStreamCaptor.toString().trim());
-    }
-
-    @Test
+    //proper functionality of concatenating all basic literal types
     public void charNumberStringCombine(){
         interpretToConsole("print 'a' + 2 + \"string\";");
         Assertions.assertEquals("a2string",outputStreamCaptor.toString().trim());
     }
 
     @Test
+    //proper printing of char feature
+    public void validCharPrint(){
+        Stmt.Print statement = new Stmt.Print(new Expr.Literal('c'));
+        interpreter.visitPrintStmt(statement);
+        Assertions.assertEquals("c",outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    //dividing by zero should not be permitted in simple mathematics
     public void divideByZeroError(){
         interpretToConsole("var a = 1/0;");
         String expectedOut = "Dividing by zero is not accepted.\n" +
                 "[line 1]";
         Assertions.assertEquals(expectedOut, errStreamCaptor.toString().trim());
+    }
+
+    //ensure modulor oeprator works and only for integers
+    @Test
+    public void validModuloOp(){
+        Expr.Binary expression = new Expr.Binary(
+                new Expr.Literal(2),
+                tokenMap.get("%"),
+                new Expr.Literal(1)
+        );
+        Object output = interpreter.visitBinaryExpr(expression);
+        int expected = 0;
+        Assertions.assertEquals(Integer.toString(expected),output.toString());
     }
 }
