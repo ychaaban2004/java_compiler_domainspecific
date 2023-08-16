@@ -103,7 +103,9 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     }
 
     private void checkForIntegerOperands(Token operator, Object left, Object right){
-        if(left instanceof Integer && right instanceof Integer) return;
+        double decimalLeft = (Double)left - Math.floor((Double)left);
+        double decimalRight = (Double)right - Math.floor((Double)right);
+        if(decimalLeft == 0 && decimalRight == 0) return;
         throw new RuntimeError(operator,"Both operands must be an integer.");
     }
 
@@ -294,7 +296,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
                 return (double)left * (double)right;
             case MODULO:
                 checkForIntegerOperands(expr.operator, left, right);
-                return (Integer)left % (Integer)right;
+                return (double)left % (double)right;
             default: 
         }
 
