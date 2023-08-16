@@ -7,8 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static craftinginterpreters.trick.TokenType.*;
 
@@ -19,8 +20,15 @@ class InterpreterTest {
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     private final ByteArrayOutputStream errStreamCaptor = new ByteArrayOutputStream();
     private final static boolean pos = true; boolean neg = false;
-    private final Token andOp = new Token(AND,"and", null, 1);
-    private final Token orOp = new Token(OR,"or",null,1);
+
+    private final Map<String,Token> tokenMap = new HashMap<>() {{
+       put("and",new Token(AND,"and", null, 1));
+       put("or",new Token(OR,"or",null,1));
+       put("bang",new Token(BANG,"bang",null,1));
+       put("+", new Token(PLUS,"+",null,1));
+       put("%",new Token(MODULO,"%",null,1));
+    }};
+
 
     @BeforeEach
     public void setUp() {
@@ -88,7 +96,7 @@ class InterpreterTest {
     public void validOr1() {
         Expr.Logical expression = new Expr.Logical(
                 new Expr.Literal(pos),
-                orOp,
+                tokenMap.get("or"),
                 new Expr.Literal(neg)
         );
         boolean result = (boolean) interpreter.visitLogicalExpr(expression);
@@ -99,7 +107,7 @@ class InterpreterTest {
     public void validOr2() {
         Expr.Logical expression = new Expr.Logical(
                 new Expr.Literal(neg),
-                orOp,
+                tokenMap.get("or"),
                 new Expr.Literal(pos)
         );
         boolean result = (boolean) interpreter.visitLogicalExpr(expression);
@@ -110,7 +118,7 @@ class InterpreterTest {
     public void validAnd1() {
         Expr.Logical expression = new Expr.Logical(
                 new Expr.Literal(neg),
-                andOp,
+                tokenMap.get("and"),
                 new Expr.Literal(pos)
         );
         boolean result = (boolean) interpreter.visitLogicalExpr(expression);
@@ -121,7 +129,7 @@ class InterpreterTest {
     public void validAnd2() {
         Expr.Logical expression = new Expr.Logical(
                 new Expr.Literal(pos),
-                andOp,
+                tokenMap.get("and"),
                 new Expr.Literal(neg)
         );
         boolean result = (boolean) interpreter.visitLogicalExpr(expression);
@@ -132,16 +140,51 @@ class InterpreterTest {
     public void validAnd3() {
         Expr.Logical expression = new Expr.Logical(
                 new Expr.Literal(pos),
-                andOp,
+                tokenMap.get("and"),
                 new Expr.Literal(pos)
         );
         boolean result = (boolean) interpreter.visitLogicalExpr(expression);
         Assertions.assertEquals(pos, result);
     }
 
+    @Test
+    public void validVisitUnaryExpr(){
+        Expr.Unary expression = new Expr.Unary(tokenMap.get("bang"),new Expr.Literal(pos));
+        Object result = interpreter.visitUnaryExpr(expression);
+        Assertions.assertEquals(neg,result);
+    }
+
+//binary expr: test switch case and runtime error throws
+    @Test
+    public void binaryExprSwitch(){
+        Expr.Binary expression = new Expr.Binary(
+                new Expr.Literal(1.0),
+                tokenMap.get("+"),
+                new Expr.Literal(1.0));
+        Object result = interpreter.visitBinaryExpr(expression);
+        Assertions.assertEquals(2.0,result);
+    }
+
+    @Test
+    public void binaryThrow(){
+        boolean errorThrown = false;
+        Expr.Binary expression = new Expr.Binary(
+                new Expr.Literal(1),
+                tokenMap.get("+"),
+                new Expr.Literal(1)
+        );//this is a number but Trick only takes doubles from the parser - no ints being passed from parser allowed
+        try {
+            interpreter.visitBinaryExpr(expression);
+        }catch (RuntimeError error){
+            errorThrown = true;
+        }
+        Assertions.assertEquals(pos,errorThrown);
+    }
+
 
     //BONUS FEATURES BEGIN
     @Test
+    //ensure we cannot redeclare a variable that has already been defined
     public void invalidVarRedeclaration(){
         Token a_var = new Token(IDENTIFIER,"a",null,1);
 
@@ -156,21 +199,39 @@ class InterpreterTest {
     }
 
     @Test
-    public void stringNumberCombine(){
-        interpretToConsole("print \"String \"+4;");
-        Assertions.assertEquals("String 4",outputStreamCaptor.toString().trim());
-    }
-
-    @Test
+    //proper functionality of concatenating all basic literal types
     public void charNumberStringCombine(){
         interpretToConsole("print 'a' + 2 + \"string\";");
         Assertions.assertEquals("a2string",outputStreamCaptor.toString().trim());
     }
 
     @Test
+    //proper printing of char feature
+    public void validCharPrint(){
+        Stmt.Print statement = new Stmt.Print(new Expr.Literal('c'));
+        interpreter.visitPrintStmt(statement);
+        Assertions.assertEquals("c",outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    //dividing by zero should not be permitted in simple mathematics
     public void divideByZeroError(){
         interpretToConsole("var a = 1/0;");
-        String expectedOut = "[line 1] Error:Dividing by zero is invalid and will produce infinity as a compensation.";
+        String expectedOut = "Dividing by zero is not accepted.\n" +
+                "[line 1]";
         Assertions.assertEquals(expectedOut, errStreamCaptor.toString().trim());
+    }
+
+    //ensure modulor oeprator works and only for integers
+    @Test
+    public void validModuloOp(){
+        Expr.Binary expression = new Expr.Binary(
+                new Expr.Literal(2),
+                tokenMap.get("%"),
+                new Expr.Literal(1)
+        );
+        Object output = interpreter.visitBinaryExpr(expression);
+        int expected = 0;
+        Assertions.assertEquals(Integer.toString(expected),output.toString());
     }
 }

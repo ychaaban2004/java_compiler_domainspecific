@@ -103,6 +103,11 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         throw new RuntimeError(operator, "Both operands must be a number.");
     }
 
+    private void checkForIntegerOperands(Token operator, Object left, Object right){
+        if(left instanceof Integer && right instanceof Integer) return;
+        throw new RuntimeError(operator,"Both operands must be an integer.");
+    }
+
     @Override
     public Void visitBlockStmt(Stmt.Block stmt) {
         executeBlock(stmt.statements, new Environment(environment));
@@ -293,15 +298,15 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             case SLASH:
                 checkNumberOperands(expr.operator, left, right);
                 if((double)right == 0.0){
-                    Trick.error(expr.operator.line,"Dividing by zero is invalid and will produce infinity as a compensation.");
+                    throw new RuntimeError(expr.operator,"Dividing by zero is not accepted.");
                 }
                 return (double)left / (double)right;
             case STAR:
                 checkNumberOperands(expr.operator, left, right);
                 return (double)left * (double)right;
             case MODULO:
-                checkNumberOperands(expr.operator, left, right);
-                return (double)left % (double) right;
+                checkForIntegerOperands(expr.operator, left, right);
+                return (Integer)left % (Integer)right;
             default: 
         }
 
