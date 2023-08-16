@@ -234,4 +234,8 @@ class InterpreterTest {
         int expected = 0;
         Assertions.assertEquals(Integer.toString(expected),output.toString());
     }
+    @Test
+    public void invalidModuloOp(){
+
+    }
 }
