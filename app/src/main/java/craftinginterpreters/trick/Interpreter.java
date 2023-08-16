@@ -1,5 +1,6 @@
 package craftinginterpreters.trick;
 
+import java.util.ArrayList;
 import java.util.List;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
@@ -241,6 +242,17 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
         //Unreachable for whatever reason - satisfying method return syntax
         return null;
+    }
+
+    @Override
+    public Object visitCallExpr(Expr.Call expr) {
+        Object callee = evaluate(expr.callee);
+        List<Object> arguements = new ArrayList<>();
+        for(Expr arguement: expr.arguements) {
+            arguements.add(evaluate(arguement));
+        }
+        LoxCallable function = (LoxCallable) callee;
+        return function.call(this,arguements);
     }
 
     @Override
