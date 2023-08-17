@@ -226,16 +226,27 @@ class InterpreterTest {
     @Test
     public void validModuloOp(){
         Expr.Binary expression = new Expr.Binary(
-                new Expr.Literal(2),
+                new Expr.Literal(2.0),
                 tokenMap.get("%"),
-                new Expr.Literal(1)
+                new Expr.Literal(1.0)
         );
         Object output = interpreter.visitBinaryExpr(expression);
-        int expected = 0;
-        Assertions.assertEquals(Integer.toString(expected),output.toString());
+        double expected = 0.0;
+        Assertions.assertEquals(Double.toString(expected),output.toString());
     }
     @Test
     public void invalidModuloOp(){
-
+        boolean errorThrown = false;
+        Expr.Binary expression = new Expr.Binary(
+                new Expr.Literal(2.2),
+                tokenMap.get("%"),
+                new Expr.Literal(1.3)
+        );
+        try{
+            interpreter.visitBinaryExpr(expression);
+        } catch(RuntimeError error){
+            errorThrown = true;
+        }
+        Assertions.assertEquals(pos,errorThrown);
     }
 }
