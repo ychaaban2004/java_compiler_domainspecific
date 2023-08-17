@@ -73,7 +73,11 @@ class Parser {
         if(match(WHILE)) return whileStatement();
         if(match(LEFT_BRACE)) return new Stmt.Block(block());
 
-        return expressionStatement();
+        Expr expr = expression();
+        if(match(QUESTION)){
+            return tertiaryStmt(expr);
+        }
+        return expressionStatement(expr);
     }
 
     private Stmt forStatement(){
@@ -117,10 +121,10 @@ class Parser {
 
         return body;
     }
-
     /*Creates our visitor pattern objects for if-else statements, to be used by Interpreter
     * @param: none
     * @return: Stmt object of innermost if-else statement*/
+
     private Stmt ifStatement(){
         consume(LEFT_PAREN, "Expect '(' after 'if'.");
         Expr condition = expression();
@@ -133,6 +137,17 @@ class Parser {
         }
 
         return new Stmt.If(condition,thenBranch,elseBranch);
+    }
+
+    /*Takes care of tertiaryStmt similar to if-else statement*/
+    private Stmt tertiaryStmt(Expr condition){
+        Stmt thenStmt = statement();
+        Stmt elseStmt = null;
+        if(match(COLON)){
+            elseStmt = statement();
+        }
+
+        return new Stmt.If(condition,thenStmt,elseStmt);
     }
 
     private Stmt whileStatement(){
@@ -160,6 +175,11 @@ class Parser {
      * @param: none
      * @return: Stmt object
      */
+    private Stmt expressionStatement(Expr expr){
+        consume(SEMICOLON, "Expect ';' after expression.");
+        return new Stmt.Expression(expr);
+    }
+
     private Stmt expressionStatement(){
         Expr expr = expression();
         consume(SEMICOLON, "Expect ';' after expression.");

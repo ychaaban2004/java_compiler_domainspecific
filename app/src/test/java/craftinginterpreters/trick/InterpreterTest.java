@@ -249,4 +249,32 @@ class InterpreterTest {
         }
         Assertions.assertEquals(pos,errorThrown);
     }
+
+    @Test
+    public void tertiaryTest1(){
+        interpretToConsole("var a = 1;");
+        interpretToConsole("a == 1 ? print 1; : print 2;");
+        Assertions.assertEquals("1",outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    public void tertiaryTest2(){
+        interpretToConsole("var a = 1;");
+        interpretToConsole("a == 3 ? print 1; : print 2;");
+        Assertions.assertEquals("2",outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    public void tertiaryTest3(){
+        interpretToConsole("var a = 1;");
+        interpretToConsole("a == 1 ? print 1;");
+        Assertions.assertEquals("1",outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    public void tertiaryTest4(){
+        interpretToConsole("var a = 1;");
+        interpretToConsole("a == 3 ? print 1;");
+        Assertions.assertEquals("",outputStreamCaptor.toString().trim());
+    }
 }

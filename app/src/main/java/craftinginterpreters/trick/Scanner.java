@@ -1,6 +1,5 @@
 package craftinginterpreters.trick;
 
-import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,6 +89,8 @@ class Scanner {
             case ';': addToken(SEMICOLON); break;
             case '*': addToken(STAR); break;
             case '%': addToken(MODULO); break;
+            case '?': addToken(QUESTION); break;
+            case ':': addToken(COLON); break;
             case '!':
                 addToken(match('=') ? BANG_EQUAL: BANG);
                 break;
