@@ -8,6 +8,7 @@
 - Divide by zero error
 - Var reinitialization error
 - Modulo operator
+- Tertiary statement
 
 # Testing
 ## Scanner
@@ -39,7 +40,7 @@
 - [x] Divide by zero error
 - [x] Var reinitialization error
 - [x] Modulo Operator - Issue: Prevent Non-integers - in progress
-- [ ] Tertiary Tests
+- [x] Tertiary Tests
 
 ##  Environment - General Tests Needed
 - [ ] General Tests
