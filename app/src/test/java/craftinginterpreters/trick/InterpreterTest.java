@@ -226,12 +226,55 @@ class InterpreterTest {
     @Test
     public void validModuloOp(){
         Expr.Binary expression = new Expr.Binary(
-                new Expr.Literal(2),
+                new Expr.Literal(2.0),
                 tokenMap.get("%"),
-                new Expr.Literal(1)
+                new Expr.Literal(1.0)
         );
         Object output = interpreter.visitBinaryExpr(expression);
-        int expected = 0;
-        Assertions.assertEquals(Integer.toString(expected),output.toString());
+        double expected = 0.0;
+        Assertions.assertEquals(Double.toString(expected),output.toString());
+    }
+    @Test
+    public void invalidModuloOp(){
+        boolean errorThrown = false;
+        Expr.Binary expression = new Expr.Binary(
+                new Expr.Literal(2.2),
+                tokenMap.get("%"),
+                new Expr.Literal(1.3)
+        );
+        try{
+            interpreter.visitBinaryExpr(expression);
+        } catch(RuntimeError error){
+            errorThrown = true;
+        }
+        Assertions.assertEquals(pos,errorThrown);
+    }
+
+    @Test
+    public void tertiaryTest1(){
+        interpretToConsole("var a = 1;");
+        interpretToConsole("a == 1 ? print 1; : print 2;");
+        Assertions.assertEquals("1",outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    public void tertiaryTest2(){
+        interpretToConsole("var a = 1;");
+        interpretToConsole("a == 3 ? print 1; : print 2;");
+        Assertions.assertEquals("2",outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    public void tertiaryTest3(){
+        interpretToConsole("var a = 1;");
+        interpretToConsole("a == 1 ? print 1;");
+        Assertions.assertEquals("1",outputStreamCaptor.toString().trim());
+    }
+
+    @Test
+    public void tertiaryTest4(){
+        interpretToConsole("var a = 1;");
+        interpretToConsole("a == 3 ? print 1;");
+        Assertions.assertEquals("",outputStreamCaptor.toString().trim());
     }
 }

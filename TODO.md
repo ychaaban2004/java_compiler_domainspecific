@@ -6,6 +6,9 @@
 - Blob Error Reporting
 - String/Number/Char concatenation
 - Divide by zero error
+- Var reinitialization error
+- Modulo operator
+- Tertiary statement
 
 # Testing
 ## Scanner
@@ -14,15 +17,17 @@
 <div></div>
 
 ### Bonus
-
 - [x] Char Tests
+
+
 ## Parser  -RATIQ YOU CAN UPDATE THIS
 - [x] General Tests
 <div></div>
 
 ### Bonus
-
 - [ ] Char Tests
+
+
 ## Interpreter
 - [x] General Tests - in progress
 
@@ -34,7 +39,8 @@
 - [x] String/Number/Char concatenation
 - [x] Divide by zero error
 - [x] Var reinitialization error
-- [ ] Modulo Operator - Issue: Prevent Non-integers - in progress
+- [x] Modulo Operator - Issue: Prevent Non-integers - in progress
+- [x] Tertiary Tests
 
 ##  Environment - General Tests Needed
 - [ ] General Tests
