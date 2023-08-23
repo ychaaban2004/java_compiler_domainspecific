@@ -178,6 +178,14 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return null;
     }
 
+    /*Sets up environment and calling reference to a function to be accessed
+    * @param: Function object of Stmt class
+    * @return: null*/
+    @Override
+    public Void visitFunctionStmt(Stmt.Function stmt){
+        TrickFunction function = new TrickFunction(stmt,environment);
+    }
+
     /*Similar to variable initializer except no new var is defined, and we must assign
      * @param: Expr of the assign abstract subclass
      * @return: the object value of the var - check documentation on variables about this
