@@ -1,11 +1,14 @@
 package craftinginterpreters.trick;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     private Environment environment = new Environment();
+    private final Map<Expr, Integer> locals = new HashMap<>();
 
     /*
      * Public API connecting the expression interaction of Interpreter, Expr,
@@ -30,6 +33,13 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
      */
     private void execute(Stmt stmt){
         stmt.accept(this);
+    }
+
+    /*Stores var data, but the data needed for resolving stmts/expr
+    * @param: expression object of info, int distance between use and definition of data
+    * @return: none*/
+    void resolve(Expr expr, int depth){
+        locals.put(expr,depth);
     }
 
     void executeBlock(List<Stmt> statements, Environment environment){
@@ -193,7 +203,14 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     @Override
     public Object visitAssignExpr(Expr.Assign expr){
         Object value = evaluate(expr.value);
-        environment.assign(expr.name, value);
+
+        Integer distance = locals.get(expr);
+        if(distance != null){
+            environment.assignAt(distance, expr.name, value);
+        } else {
+            globals.assign(expr.name, value);
+        }
+
         return value;
     }
 
@@ -203,7 +220,15 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
      */
     @Override
     public Object visitVariableExpr(Expr.Variable expr){
-        return environment.get(expr.name);
+        return lookUpVariable(expr.name,expr);
+    }
+    private Object lookUpVariable(Token name, Expr expr){
+        Integer distance = locals.get(expr);
+        if(distance != null){
+            return environment.getAt(distance, name.lexeme);
+        } else {
+            return globals.get(name);
+        }
     }
 
     /*evaluates literals by returning the value
