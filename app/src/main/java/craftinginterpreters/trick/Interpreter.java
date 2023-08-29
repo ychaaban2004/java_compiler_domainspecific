@@ -5,7 +5,28 @@ import java.util.List;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
-    private Environment environment = new Environment();
+    final Environment globals = new Environment();
+    private Environment environment = globals;
+
+
+    Interpreter() {
+        globals.define("clock", new TrickCallable() {
+            
+            @Override
+            public int arity() { return 0; }
+            
+            @Override
+            public Object call(Interpreter interpreter, List<Object> arguements) {
+                return (double) System.currentTimeMillis()/1000.0;
+            }
+
+            @Override
+            public String toString() {
+                return "<native fn.>";
+            }
+        });
+    }
+
 
     /*
      * Public API connecting the expression interaction of Interpreter, Expr,
@@ -44,6 +65,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
             this.environment = previous;
         }
     }
+
     private String stringify(Object object){
         if(object == null) return "nil";
 
@@ -66,7 +88,8 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return expr.accept(this);
     }
 
-    /*Determines if any expression is inherently true or false
+    /*
+     * Determines if any expression is inherently true or false
      * @param: object of analysis
      * @return: true/false
      */
@@ -88,6 +111,7 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         //the equal method will satisfy our trick documentation
         return a.equals(b);
     }
+
     /*
      * Ensures the taken obejcts are actually number (Double) instances
      * @param: operator Token, and operand object(s)
@@ -116,6 +140,20 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitFunctionStmt(Stmt.Function stmt) {
+        TrickFunction function = new TrickFunction(stmt, environment);
+        environment.define(stmt.name.lexeme, function);
+        return null;
+    }
+
+    @Override
+    public Void visitReturnStmt(Stmt.Return stmt) {
+        Object value = null;
+        if(stmt.value != null) value = evaluate(stmt.value);
+        throw new Return(value);
+    }
+
     /*implements if else statement abstract interface execution
     * @param: Stmt.If object
     * @return: null*/
@@ -133,7 +171,8 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
      * Implements abstract Stmt interface, by evaluating expression or printing out the statment
      * as appropriate
      * @param: Expression subclass of Stmt object
-     * @return: none*/
+     * @return: none
+     */
     @Override
     public Void visitExpressionStmt(Stmt.Expression stmt){
         evaluate(stmt.expression);
@@ -258,7 +297,13 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         for(Expr arguement: expr.arguements) {
             arguements.add(evaluate(arguement));
         }
+        if(!(callee instanceof TrickCallable)) {
+            throw new RuntimeError(expr.paren, "Can only call functions and classes.");
+        }
         TrickCallable function = (TrickCallable) callee;
+        if(arguements.size() != function.arity()) {
+            throw new RuntimeError(expr.paren, "Expected " + function.arity() + " arguements but got " + arguements.size() + ".");
+        }
         return function.call(this,arguements);
     }
 
