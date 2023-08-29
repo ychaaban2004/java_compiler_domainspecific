@@ -1,12 +1,15 @@
 package craftinginterpreters.trick;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
 
     final Environment globals = new Environment();
     private Environment environment = globals;
+    private final Map<Expr, Integer> locals = new HashMap<>();
 
 
     Interpreter() {
@@ -51,6 +54,13 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
      */
     private void execute(Stmt stmt){
         stmt.accept(this);
+    }
+
+    /*Stores var data, but the data needed for resolving stmts/expr
+    * @param: expression object of info, int distance between use and definition of data
+    * @return: none*/
+    void resolve(Expr expr, int depth){
+        locals.put(expr,depth);
     }
 
     void executeBlock(List<Stmt> statements, Environment environment){
@@ -141,13 +151,6 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     }
 
     @Override
-    public Void visitFunctionStmt(Stmt.Function stmt) {
-        TrickFunction function = new TrickFunction(stmt, environment);
-        environment.define(stmt.name.lexeme, function);
-        return null;
-    }
-
-    @Override
     public Void visitReturnStmt(Stmt.Return stmt) {
         Object value = null;
         if(stmt.value != null) value = evaluate(stmt.value);
@@ -217,6 +220,16 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
         return null;
     }
 
+    /*Sets up environment and calling reference to a function to be accessed
+    * @param: Function object of Stmt class
+    * @return: null*/
+    @Override
+    public Void visitFunctionStmt(Stmt.Function stmt){
+        TrickFunction function = new TrickFunction(stmt,environment);
+        environment.define(stmt.name.lexeme, function);
+        return null;
+    }
+
     /*Similar to variable initializer except no new var is defined, and we must assign
      * @param: Expr of the assign abstract subclass
      * @return: the object value of the var - check documentation on variables about this
@@ -224,7 +237,14 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
     @Override
     public Object visitAssignExpr(Expr.Assign expr){
         Object value = evaluate(expr.value);
-        environment.assign(expr.name, value);
+
+        Integer distance = locals.get(expr);
+        if(distance != null){
+            environment.assignAt(distance, expr.name, value);
+        } else {
+            globals.assign(expr.name, value);
+        }
+
         return value;
     }
 
@@ -234,7 +254,15 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void>{
      */
     @Override
     public Object visitVariableExpr(Expr.Variable expr){
-        return environment.get(expr.name);
+        return lookUpVariable(expr.name,expr);
+    }
+    private Object lookUpVariable(Token name, Expr expr){
+        Integer distance = locals.get(expr);
+        if(distance != null){
+            return environment.getAt(distance, name.lexeme);
+        } else {
+            return globals.get(name);
+        }
     }
 
     /*evaluates literals by returning the value
